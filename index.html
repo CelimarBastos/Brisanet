@@ -8,43 +8,98 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 20px;
+      padding: 10px;
       background-color: #f5f5f5;
+      min-height: 100vh;
     }
 
     .container {
       position: relative;
-      width: 210mm; /* Largura A4 */
+      width: 100%;
       max-width: 800px;
       margin: auto;
-      max-height: 297mm; /* Altura A4 */
-      overflow: hidden;
       background: white;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      overflow: visible;
     }
 
     .imagem-fundo {
       width: 100%;
       height: auto;
-      max-height: 100%;
       display: block;
       object-fit: contain;
     }
 
     .campo {
       position: absolute;
-      font-size: 14px;
-      padding: 2px;
-      border: 1px solid #ccc;
+      font-size: 12px;
+      padding: 1px 2px;
+      border: 1px solid #007bff;
       border-radius: 3px;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.95);
       font-family: Arial, sans-serif;
+      min-height: 16px;
+      box-sizing: border-box;
     }
 
     .campo:focus {
-      border-color: #007bff;
+      border-color: #0056b3;
       outline: none;
       background: white;
+      z-index: 100;
+    }
+
+    /* Responsividade para celular */
+    @media (max-width: 768px) {
+      body {
+        padding: 5px;
+      }
+      
+      .container {
+        width: 100%;
+        margin: 0;
+        overflow-x: auto;
+      }
+      
+      .campo {
+        font-size: 10px;
+        padding: 1px;
+        min-height: 14px;
+        min-width: 20px;
+      }
+      
+      .campo[type="text"] {
+        min-width: 40px;
+      }
+      
+      .button-container {
+        padding: 15px 10px !important;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .pdf-button, .whatsapp-button {
+        width: 100%;
+        min-width: auto;
+        margin: 0;
+        padding: 15px 20px;
+        font-size: 16px;
+      }
+    }
+
+    /* Para telas muito pequenas */
+    @media (max-width: 480px) {
+      .container {
+        transform: scale(0.9);
+        transform-origin: top left;
+        width: 111%;
+      }
+      
+      .campo {
+        font-size: 9px;
+        border-width: 1px;
+      }
     }
 
     .button-container {
@@ -107,9 +162,11 @@
       
       .container {
         page-break-inside: avoid;
-        transform: scale(0.8);
+        transform: scale(0.75);
         transform-origin: top left;
         box-shadow: none;
+        width: 210mm;
+        max-height: 297mm;
       }
       
       .button-container {
@@ -169,18 +226,60 @@
   <div class="button-container">
     <button onclick="gerarPDF()" class="pdf-button">📄 Baixar como PDF</button>
     <button onclick="enviarWhatsApp()" class="whatsapp-button">📱 Enviar WhatsApp</button>
+    <button onclick="imprimirFormulario()" class="pdf-button" style="background: #6c757d;">🖨️ Imprimir</button>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
+    // Detectar se é dispositivo móvel
+    function isMobile() {
+      return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    // Ajustar para mobile quando carregar a página
+    function ajustarParaMobile() {
+      if (isMobile()) {
+        const container = document.getElementById('formulario-pdf');
+        const campos = document.querySelectorAll('.campo');
+        
+        // Melhorar visibilidade dos campos no mobile
+        campos.forEach(campo => {
+          campo.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+          campo.style.border = '2px solid #007bff';
+          if (campo.type === 'text') {
+            campo.style.minWidth = '60px';
+          }
+        });
+
+        // Adicionar evento de zoom nos campos para mobile
+        campos.forEach(campo => {
+          campo.addEventListener('focus', function() {
+            this.style.transform = 'scale(1.1)';
+            this.style.zIndex = '1000';
+            this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          });
+          
+          campo.addEventListener('blur', function() {
+            this.style.transform = '';
+            this.style.zIndex = '';
+          });
+        });
+      }
+    }
+
     function gerarPDF() {
       const container = document.getElementById('formulario-pdf');
       const inputs = container.querySelectorAll('input');
       const substituidos = [];
 
-      // Forçar redimensionamento do container
-      container.style.transform = 'scale(0.75)';
-      container.style.transformOrigin = 'top left';
+      // Forçar redimensionamento do container (ajustado para mobile)
+      if (isMobile()) {
+        container.style.transform = 'scale(0.6)';
+        container.style.transformOrigin = 'top left';
+      } else {
+        container.style.transform = 'scale(0.75)';
+        container.style.transformOrigin = 'top left';
+      }
       container.style.width = '210mm';
       container.style.maxHeight = '297mm';
 
@@ -268,6 +367,58 @@
           // Restore button
           button.textContent = originalText;
           button.disabled = false;
+    // Função alternativa para imprimir (fallback)
+    function imprimirFormulario() {
+      const container = document.getElementById('formulario-pdf');
+      const inputs = container.querySelectorAll('input');
+      const substituidos = [];
+
+      // Replace inputs with spans for printing
+      inputs.forEach(input => {
+        const span = document.createElement('span');
+        
+        if (input.type === 'checkbox') {
+          span.textContent = input.checked ? '✓' : '';
+          span.style.fontSize = '14px';
+        } else {
+          span.textContent = input.value || '__________';
+          span.style.fontSize = '12px';
+        }
+        
+        span.className = 'campo';
+        span.style.position = 'absolute';
+        span.style.top = input.style.top;
+        span.style.left = input.style.left;
+        span.style.width = input.style.width;
+        span.style.color = '#000';
+        span.style.fontWeight = 'bold';
+        span.style.fontFamily = 'Arial, sans-serif';
+        span.style.padding = '2px';
+        span.style.border = 'none';
+        span.style.background = 'transparent';
+        
+        container.appendChild(span);
+        substituidos.push({ original: input, substituto: span });
+        input.style.display = 'none';
+      });
+
+      // Trigger print dialog
+      window.print();
+
+      // Restore after print
+      setTimeout(() => {
+        substituidos.forEach(({ original, substituto }) => {
+          substituto.remove();
+          original.style.display = '';
+        });
+      }, 1000);
+    }
+
+    // Inicializar quando a página carregar
+    document.addEventListener('DOMContentLoaded', function() {
+      ajustarParaMobile();
+    });
+
     // Limpar dados quando a página for fechada
     window.addEventListener('beforeunload', function() {
       // Limpar qualquer dado salvo anteriormente
@@ -279,9 +430,14 @@
       const inputs = container.querySelectorAll('input');
       const substituidos = [];
 
-      // Forçar redimensionamento do container
-      container.style.transform = 'scale(0.75)';
-      container.style.transformOrigin = 'top left';
+      // Forçar redimensionamento do container (ajustado para mobile)
+      if (isMobile()) {
+        container.style.transform = 'scale(0.6)';
+        container.style.transformOrigin = 'top left';
+      } else {
+        container.style.transform = 'scale(0.75)';
+        container.style.transformOrigin = 'top left';
+      }
       container.style.width = '210mm';
       container.style.maxHeight = '297mm';
 
@@ -377,7 +533,15 @@
           // This will open WhatsApp with the message, user needs to manually attach the PDF
           const whatsappURL = `https://web.whatsapp.com/send?text=${mensagem}`;
           
-          // Open WhatsApp in new tab
+          // Para mobile, usar WhatsApp app em vez de web
+          let whatsappURL;
+          if (isMobile()) {
+            whatsappURL = `whatsapp://send?text=${mensagem}`;
+          } else {
+            whatsappURL = `https://web.whatsapp.com/send?text=${mensagem}`;
+          }
+          
+          // Open WhatsApp
           window.open(whatsappURL, '_blank');
           
           // Also download the PDF for manual attachment
@@ -385,7 +549,10 @@
           
           // Show instruction to user
           setTimeout(() => {
-            alert('📱 WhatsApp aberto!\n\n✅ O PDF foi baixado automaticamente.\n📎 Anexe o arquivo PDF manualmente no WhatsApp.\n\n💡 A mensagem já está pronta para enviar!');
+            const instrucao = isMobile() ? 
+              '📱 WhatsApp aberto!\n\n✅ O PDF foi baixado automaticamente.\n📎 Anexe o arquivo PDF no chat.\n\n💡 A mensagem já está pronta para enviar!' :
+              '📱 WhatsApp Web aberto!\n\n✅ O PDF foi baixado automaticamente.\n📎 Anexe o arquivo PDF manualmente no WhatsApp.\n\n💡 A mensagem já está pronta para enviar!';
+            alert(instrucao);
           }, 1000);
           
         })

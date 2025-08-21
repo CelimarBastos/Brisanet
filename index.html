@@ -42,6 +42,16 @@
       box-sizing: border-box;
     }
 
+    .campo[type="checkbox"] {
+      width: 12px;
+      height: 12px;
+      min-height: 12px;
+      padding: 0;
+      margin: 0;
+      transform: scale(0.8);
+      cursor: pointer;
+    }
+
     .campo:focus {
       border-color: #0056b3;
       outline: none;
@@ -70,6 +80,13 @@
       
       .campo[type="text"] {
         min-width: 40px;
+      }
+      
+      .campo[type="checkbox"] {
+        width: 10px;
+        height: 10px;
+        min-height: 10px;
+        transform: scale(0.7);
       }
       
       .button-container {
@@ -231,33 +248,33 @@
     <input type="text" class="campo" style="top: 255px; left: 575px; width: 150px;" placeholder="CPF" id="cpfCliente">
     
     <!-- Serviços cancelados -->
-    <input type="checkbox" class="campo" style="top: 322px; left: 190px;" id="servico1">
-    <input type="checkbox" class="campo" style="top: 322px; left: 336px;" id="servico2">
-    <input type="checkbox" class="campo" style="top: 322px; left: 488px;" id="servico3">
-    <input type="checkbox" class="campo" style="top: 322px; left: 568px;" id="servico4">
+    <input type="checkbox" class="campo" style="top: 322px; left: 190px;" id="servico1" title="Internet">
+    <input type="checkbox" class="campo" style="top: 322px; left: 336px;" id="servico2" title="TV">
+    <input type="checkbox" class="campo" style="top: 322px; left: 488px;" id="servico3" title="Telefone">
+    <input type="checkbox" class="campo" style="top: 322px; left: 568px;" id="servico4" title="Outros">
     
     <!-- Equipamentos -->
-    <input type="checkbox" class="campo" style="top: 419px; left: 150px;" id="equipONU">
+    <input type="checkbox" class="campo" style="top: 419px; left: 150px;" id="equipONU" title="ONU">
     <input type="text" class="campo" style="top: 413px; left: 218px; width: 450px;" placeholder="MAC ONU" id="macONU">
     
-    <input type="checkbox" class="campo" style="top: 454px; left: 203px;" id="equipReceptor">
+    <input type="checkbox" class="campo" style="top: 454px; left: 203px;" id="equipReceptor" title="Receptor">
     <input type="text" class="campo" style="top: 450px; left: 266px; width: 401px;" placeholder="MAC Receptor" id="macReceptor">
     
-    <input type="checkbox" class="campo" style="top: 506px; left: 183px;" id="equipRoteador">
+    <input type="checkbox" class="campo" style="top: 506px; left: 183px;" id="equipRoteador" title="Roteador">
     <input type="text" class="campo" style="top: 502px; left: 236px; width: 430px;" placeholder="N/S Roteador" id="nsRoteador">
     
-    <input type="checkbox" class="campo" style="top: 538px; left: 178px;" id="equipTelefone">
+    <input type="checkbox" class="campo" style="top: 538px; left: 178px;" id="equipTelefone" title="Telefone">
     <input type="text" class="campo" style="top: 533px; left: 235px; width: 432px;" placeholder="N/S Telefone" id="nsTelefone">
     
     <!-- Os kits estão completos -->
     <input type="text" class="campo" style="top: 593px; left: 153px; width: 300px;" placeholder="Os kits estão completos" id="kitsTexto">
-    <input type="checkbox" class="campo" style="top: 572px; left: 315px;" id="kitsCompletos">
-    <input type="checkbox" class="campo" style="top: 572px; left: 372px;" id="kitsIncompletos">
+    <input type="checkbox" class="campo" style="top: 572px; left: 315px;" id="kitsCompletos" title="Sim">
+    <input type="checkbox" class="campo" style="top: 572px; left: 372px;" id="kitsIncompletos" title="Não">
     
     <!-- Os Equipamentos estão em bom estado de conservação -->
     <input type="text" class="campo" style="top: 693px; left: 149px; width: 300px;" placeholder="Os Equipamentos estão em bom estado de conservação" id="estadoTexto">
-    <input type="checkbox" class="campo" style="top: 662px; left: 532px;" id="bomEstado">
-    <input type="checkbox" class="campo" style="top: 662px; left: 592px;" id="mauEstado">
+    <input type="checkbox" class="campo" style="top: 662px; left: 532px;" id="bomEstado" title="Sim">
+    <input type="checkbox" class="campo" style="top: 662px; left: 592px;" id="mauEstado" title="Não">
     
     <!-- Informações finais -->
     <input type="text" class="campo" style="top: 783px; left: 280px; width: 300px;" placeholder="Protocolo" id="protocolo">

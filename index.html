@@ -2,15 +2,21 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=0.5, maximum-scale=3.0">
   <title>Formulário Brisanet</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 10px;
+      padding: 8px;
       background-color: #f5f5f5;
       min-height: 100vh;
+      -webkit-text-size-adjust: none;
+      text-size-adjust: none;
     }
 
     .container {
@@ -19,8 +25,9 @@
       max-width: 800px;
       margin: auto;
       background: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
       overflow: visible;
+      border-radius: 8px;
     }
 
     .imagem-fundo {
@@ -28,155 +35,190 @@
       height: auto;
       display: block;
       object-fit: contain;
+      border-radius: 8px 8px 0 0;
     }
 
     .campo {
       position: absolute;
-      font-size: 12px;
-      padding: 1px 2px;
-      border: 1px solid #007bff;
-      border-radius: 3px;
+      font-size: 11px;
+      padding: 2px 4px;
+      border: 2px solid #007bff;
+      border-radius: 4px;
       background: rgba(255, 255, 255, 0.95);
       font-family: Arial, sans-serif;
-      min-height: 16px;
+      min-height: 18px;
       box-sizing: border-box;
+      transition: all 0.3s ease;
     }
 
     .campo[type="checkbox"] {
-      width: 12px;
-      height: 12px;
-      min-height: 12px;
+      width: 14px;
+      height: 14px;
+      min-height: 14px;
       padding: 0;
       margin: 0;
-      transform: scale(0.8);
+      transform: scale(0.9);
       cursor: pointer;
+      accent-color: #007bff;
     }
 
     .campo:focus {
       border-color: #0056b3;
       outline: none;
       background: white;
-      z-index: 100;
+      z-index: 1000;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+      transform: scale(1.05);
     }
 
-    /* Responsividade para celular */
+    .campo:active {
+      transform: scale(0.98);
+    }
+
+    /* Otimizações para mobile */
     @media (max-width: 768px) {
       body {
-        padding: 5px;
+        padding: 4px;
+        background-color: #f8f9fa;
       }
       
       .container {
         width: 100%;
         margin: 0;
-        overflow-x: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
       }
       
       .campo {
-        font-size: 10px;
-        padding: 1px;
-        min-height: 14px;
-        min-width: 20px;
+        font-size: 12px;
+        padding: 3px 5px;
+        min-height: 22px;
+        min-width: 30px;
+        border-width: 2px;
+        font-weight: 500;
       }
       
       .campo[type="text"] {
-        min-width: 40px;
+        min-width: 50px;
       }
       
       .campo[type="checkbox"] {
-        width: 10px;
-        height: 10px;
-        min-height: 10px;
-        transform: scale(0.7);
+        width: 16px;
+        height: 16px;
+        min-height: 16px;
+        transform: scale(1.0);
+      }
+      
+      .campo:focus {
+        transform: scale(1.1);
+        z-index: 1001;
+        border-color: #007bff;
+        box-shadow: 0 0 12px rgba(0, 123, 255, 0.4);
       }
       
       .button-container {
-        padding: 15px 10px !important;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        padding: 20px 15px !important;
+        margin-top: 15px;
       }
       
-      .pdf-button, .whatsapp-button, .print-button {
+      .whatsapp-button {
         width: 100%;
         min-width: auto;
         margin: 0;
-        padding: 15px 20px;
-        font-size: 16px;
+        padding: 18px 25px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
       }
     }
 
     /* Para telas muito pequenas */
     @media (max-width: 480px) {
       .container {
-        transform: scale(0.9);
-        transform-origin: top left;
-        width: 111%;
+        border-radius: 8px;
       }
       
       .campo {
-        font-size: 9px;
-        border-width: 1px;
+        font-size: 11px;
+        padding: 2px 4px;
+        min-height: 20px;
+        border-width: 2px;
+      }
+
+      .campo:focus {
+        font-size: 13px;
+        padding: 4px 6px;
+        border-width: 3px;
+      }
+
+      .whatsapp-button {
+        font-size: 16px;
+        padding: 16px 20px;
       }
     }
 
     .button-container {
       text-align: center;
-      margin-top: 20px;
-      padding: 20px;
-      background: white;
+      margin-top: 25px;
+      padding: 25px 20px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
       width: 100%;
       clear: both;
       position: relative;
       z-index: 1000;
-    }
-
-    .pdf-button, .print-button {
-      padding: 12px 24px;
-      font-size: 16px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s;
-      display: inline-block;
-      min-width: 200px;
-      margin: 5px;
-    }
-
-    .pdf-button:hover:not(:disabled), .print-button:hover:not(:disabled) {
-      background: #0056b3;
+      border-radius: 0 0 8px 8px;
     }
 
     .whatsapp-button {
-      padding: 12px 24px;
+      padding: 14px 30px;
       font-size: 16px;
-      background: #25D366;
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.3s ease;
       display: inline-block;
-      min-width: 200px;
+      min-width: 250px;
       margin: 5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .whatsapp-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .whatsapp-button:hover::before {
+      left: 100%;
     }
 
     .whatsapp-button:hover:not(:disabled) {
-      background: #1DA851;
+      background: linear-gradient(135deg, #1DA851 0%, #0F6B47 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
     }
 
-    .whatsapp-button:disabled, .pdf-button:disabled, .print-button:disabled {
+    .whatsapp-button:active {
+      transform: translateY(0);
+    }
+
+    .whatsapp-button:disabled {
       background: #6c757d;
       cursor: not-allowed;
-    }
-
-    .print-button {
-      background: #6c757d;
-    }
-
-    .print-button:hover:not(:disabled) {
-      background: #5a6268;
+      transform: none;
+      box-shadow: none;
     }
 
     /* Para garantir que tudo fique em uma página no PDF */
@@ -184,6 +226,7 @@
       body {
         margin: 0;
         padding: 0;
+        background: white;
       }
       
       .container {
@@ -193,6 +236,7 @@
         box-shadow: none;
         width: 210mm;
         max-height: 297mm;
+        border-radius: 0;
       }
       
       .button-container {
@@ -206,37 +250,83 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.8);
       display: none;
       justify-content: center;
       align-items: center;
       z-index: 9999;
       color: white;
       font-size: 18px;
+      backdrop-filter: blur(5px);
+    }
+
+    .loading-content {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #007bff;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid #25D366;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       animation: spin 1s linear infinite;
-      margin-bottom: 20px;
+      margin: 0 auto 20px;
     }
 
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    .loading-text {
+      font-size: 16px;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+
+    /* Melhorias de acessibilidade */
+    .campo:focus {
+      outline: 3px solid rgba(0, 123, 255, 0.3);
+      outline-offset: 2px;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      z-index: 10000;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    .toast.error {
+      background: #dc3545;
+    }
   </style>
 </head>
 <body>
   <!-- Overlay de loading -->
   <div class="loading-overlay" id="loadingOverlay">
-    <div style="text-align: center;">
+    <div class="loading-content">
       <div class="spinner"></div>
       <div id="loadingText">Processando...</div>
+      <div class="loading-text">Aguarde um momento</div>
     </div>
   </div>
 
@@ -289,11 +379,11 @@
     <input type="text" class="campo" style="top: 1159px; left: 678px; width: 80px;" placeholder="Ano" id="ano">
   </div>
   
-  <!-- Botões -->
+  <!-- Botão WhatsApp -->
   <div class="button-container">
-    <button onclick="gerarPDF()" class="pdf-button" id="btnPDF">📄 Baixar como PDF</button>
-    <button onclick="enviarWhatsApp()" class="whatsapp-button" id="btnWhatsApp">📱 Enviar WhatsApp</button>
-    <button onclick="imprimirFormulario()" class="print-button" id="btnImprimir">🖨️ Imprimir</button>
+    <button onclick="enviarWhatsApp()" class="whatsapp-button" id="btnWhatsApp">
+      📱 Enviar via WhatsApp
+    </button>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -301,7 +391,8 @@
     // Detectar se é dispositivo móvel
     function isMobile() {
       return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPad no Safari
+             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
+             window.innerWidth <= 768;
     }
 
     // Detectar sistema operacional
@@ -319,12 +410,36 @@
       return 'Other';
     }
 
+    // Toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type === 'error' ? 'error' : ''}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 100);
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 300);
+      }, 3000);
+    }
+
     // Mostrar loading
     function showLoading(text = 'Processando...') {
       const overlay = document.getElementById('loadingOverlay');
       const loadingText = document.getElementById('loadingText');
       loadingText.textContent = text;
       overlay.style.display = 'flex';
+      
+      // Vibrar no mobile se disponível
+      if (navigator.vibrate && isMobile()) {
+        navigator.vibrate(100);
+      }
     }
 
     // Esconder loading
@@ -333,30 +448,52 @@
       overlay.style.display = 'none';
     }
 
-    // Ajustar para mobile quando carregar a página
-    function ajustarParaMobile() {
+    // Melhorar experiência mobile
+    function otimizarParaMobile() {
       if (isMobile()) {
         const campos = document.querySelectorAll('.campo');
         
-        // Melhorar visibilidade dos campos no mobile
         campos.forEach(campo => {
-          campo.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+          // Melhorar visibilidade
+          campo.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
           campo.style.border = '2px solid #007bff';
-          if (campo.type === 'text') {
-            campo.style.minWidth = '60px';
-          }
-
-          // Adicionar evento de zoom nos campos para mobile
+          
+          // Eventos de foco otimizados para mobile
           campo.addEventListener('focus', function() {
-            this.style.transform = 'scale(1.1)';
-            this.style.zIndex = '1000';
-            this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            this.style.zIndex = '1001';
+            
+            // Scroll suave para o campo
+            setTimeout(() => {
+              this.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center',
+                inline: 'center'
+              });
+            }, 100);
+            
+            // Zoom mais suave
+            this.style.transition = 'all 0.3s ease';
           });
           
           campo.addEventListener('blur', function() {
-            this.style.transform = '';
             this.style.zIndex = '';
+            this.style.transition = 'all 0.3s ease';
           });
+
+          // Melhorar experiência touch
+          campo.addEventListener('touchstart', function() {
+            this.style.borderColor = '#0056b3';
+          });
+        });
+
+        // Melhorar botão WhatsApp para mobile
+        const btnWhatsApp = document.getElementById('btnWhatsApp');
+        btnWhatsApp.addEventListener('touchstart', function() {
+          this.style.transform = 'translateY(-1px) scale(0.98)';
+        });
+        
+        btnWhatsApp.addEventListener('touchend', function() {
+          this.style.transform = '';
         });
       }
     }
@@ -366,23 +503,20 @@
       const inputs = container.querySelectorAll('input');
       const substituidos = [];
 
-      // Replace inputs with spans for PDF generation
       inputs.forEach(input => {
         const span = document.createElement('span');
         
-        // Handle different input types
         if (input.type === 'checkbox') {
           span.textContent = input.checked ? '✓' : '☐';
           span.style.fontSize = '16px';
           span.style.fontWeight = 'bold';
           span.style.color = input.checked ? '#007bff' : '#ccc';
         } else {
-          span.textContent = input.value || '_'.repeat(20);
+          span.textContent = input.value || '_'.repeat(Math.max(10, (input.style.width.replace('px', '') / 8)));
           span.style.fontSize = '12px';
           span.style.fontWeight = 'bold';
         }
         
-        // Copy all relevant styles
         span.style.position = 'absolute';
         span.style.top = input.style.top;
         span.style.left = input.style.left;
@@ -394,6 +528,8 @@
         span.style.background = 'transparent';
         span.style.lineHeight = '1.2';
         span.style.display = 'inline-block';
+        span.style.whiteSpace = 'nowrap';
+        span.style.overflow = 'hidden';
         
         container.appendChild(span);
         substituidos.push({ original: input, substituto: span });
@@ -410,177 +546,26 @@
       });
     }
 
-    function gerarPDF() {
-      showLoading('Gerando PDF...');
-      
-      try {
-        const container = document.getElementById('formulario-pdf');
-        const substituidos = prepararParaPDF();
-
-        // PDF generation options
-        const opt = {
-          margin: 10,
-          filename: `ordem-servico-${new Date().toISOString().split('T')[0]}.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { 
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: '#ffffff',
-            scrollX: 0,
-            scrollY: 0,
-            windowWidth: container.scrollWidth,
-            windowHeight: container.scrollHeight
-          },
-          jsPDF: { 
-            unit: 'mm', 
-            format: 'a4', 
-            orientation: 'portrait' 
-          }
-        };
-
-        // Generate and download PDF
-        html2pdf().set(opt).from(container).save()
-          .then(() => {
-            console.log('PDF gerado com sucesso!');
-            hideLoading();
-          })
-          .catch((error) => {
-            console.error('Erro ao gerar PDF:', error);
-            alert('Erro ao gerar PDF. Tente novamente.');
-            hideLoading();
-          })
-          .finally(() => {
-            restaurarInputs(substituidos);
-          });
-      } catch (error) {
-        console.error('Erro geral:', error);
-        alert('Erro inesperado. Tente novamente.');
-        hideLoading();
-      }
-    }
-
-    function imprimirFormulario() {
-      showLoading('Preparando para impressão...');
-      
+    async function gerarPDFParaWhatsApp() {
       const container = document.getElementById('formulario-pdf');
       const substituidos = prepararParaPDF();
-
-      setTimeout(() => {
-        hideLoading();
-        window.print();
-        
-        setTimeout(() => {
-          restaurarInputs(substituidos);
-        }, 1000);
-      }, 500);
-    }
-
-    function enviarWhatsApp() {
-      showLoading('Preparando envio...');
-      
-      const nomeCliente = document.getElementById('nomeCliente').value || 'Cliente';
-      const protocolo = document.getElementById('protocolo').value || 'N/A';
-      const tecnico = document.getElementById('tecnico').value || 'N/A';
-      
-      const mensagem = encodeURIComponent(
-        `📋 *Ordem de Serviço Brisanet*\n\n` +
-        `👤 Cliente: ${nomeCliente}\n` +
-        `📄 Protocolo: ${protocolo}\n` +
-        `👨‍🔧 Técnico: ${tecnico}\n` +
-        `📅 Data: ${new Date().toLocaleDateString('pt-BR')}\n\n` +
-        `✅ Ordem de serviço preenchida e pronta para envio.\n\n` +
-        `*Brisanet - Conectando você ao futuro*`
-      );
-
-      // Função para abrir WhatsApp
-      function abrirWhatsApp() {
-        const os = getOS();
-        let whatsappURL;
-        let fallbackURL;
-        
-        if (os === 'iOS') {
-          // iOS - tentar app nativo primeiro
-          whatsappURL = `whatsapp://send?text=${mensagem}`;
-          fallbackURL = `https://wa.me/?text=${mensagem}`;
-        } else if (os === 'Android') {
-          // Android - tentar app nativo primeiro
-          whatsappURL = `intent://send?text=${mensagem}#Intent;package=com.whatsapp;scheme=whatsapp;launchFlags=0x10000000;end`;
-          fallbackURL = `https://wa.me/?text=${mensagem}`;
-        } else {
-          // Desktop ou outros - direto para WhatsApp Web
-          whatsappURL = `https://web.whatsapp.com/send?text=${mensagem}`;
-          fallbackURL = null;
-        }
-
-        // Tentar abrir o app nativo
-        if (isMobile() && fallbackURL) {
-          // Criar link invisível para tentar abrir o app
-          const link = document.createElement('a');
-          link.href = whatsappURL;
-          link.style.display = 'none';
-          document.body.appendChild(link);
-          
-          let appOpened = false;
-          
-          // Detectar se o app foi aberto
-          const startTime = Date.now();
-          
-          // Tentar clicar no link
-          link.click();
-          
-          // Fallback após 2.5 segundos se o app não abriu
-          const fallbackTimer = setTimeout(() => {
-            if (!appOpened && (Date.now() - startTime) < 3000) {
-              console.log('App não abriu, tentando fallback...');
-              window.open(fallbackURL, '_blank');
-            }
-          }, 2500);
-          
-          // Detectar se a página perdeu foco (indica que app abriu)
-          const onBlur = () => {
-            appOpened = true;
-            clearTimeout(fallbackTimer);
-            window.removeEventListener('blur', onBlur);
-          };
-          
-          const onFocus = () => {
-            setTimeout(() => {
-              if (!appOpened && (Date.now() - startTime) > 1000) {
-                console.log('Voltou para página, tentando fallback...');
-                window.open(fallbackURL, '_blank');
-              }
-            }, 100);
-            window.removeEventListener('focus', onFocus);
-          };
-          
-          window.addEventListener('blur', onBlur);
-          window.addEventListener('focus', onFocus);
-          
-          // Limpar link após 5 segundos
-          setTimeout(() => {
-            document.body.removeChild(link);
-          }, 5000);
-          
-        } else {
-          // Desktop ou fallback direto
-          window.open(whatsappURL, '_blank');
-        }
-      }
-
-      // Gerar PDF primeiro, depois abrir WhatsApp
-      const container = document.getElementById('formulario-pdf');
-      const substituidos = prepararParaPDF();
+      const nomeCliente = document.getElementById('nomeCliente').value || 'cliente';
 
       const opt = {
         margin: 10,
-        filename: `ordem-servico-${nomeCliente.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`,
+        filename: `ordem-servico-${nomeCliente.replace(/[^a-zA-Z0-9]/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
-          scale: 2,
+          scale: 2.5,
           useCORS: true,
           allowTaint: true,
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: container.scrollWidth,
+          windowHeight: container.scrollHeight,
+          width: container.scrollWidth,
+          height: container.scrollHeight
         },
         jsPDF: { 
           unit: 'mm', 
@@ -589,48 +574,116 @@
         }
       };
 
-      html2pdf().set(opt).from(container).save()
-        .then(() => {
+      try {
+        await html2pdf().set(opt).from(container).save();
+        restaurarInputs(substituidos);
+        return true;
+      } catch (error) {
+        console.error('Erro ao gerar PDF:', error);
+        restaurarInputs(substituidos);
+        return false;
+      }
+    }
+
+    function enviarWhatsApp() {
+      // Validação básica
+      const nomeCliente = document.getElementById('nomeCliente').value;
+      if (!nomeCliente.trim()) {
+        showToast('Por favor, preencha o nome do cliente', 'error');
+        document.getElementById('nomeCliente').focus();
+        return;
+      }
+
+      showLoading('Gerando PDF e preparando envio...');
+      
+      const protocolo = document.getElementById('protocolo').value || 'Não informado';
+      const tecnico = document.getElementById('tecnico').value || 'Não informado';
+      const cidade = document.getElementById('cidade').value || 'Não informada';
+      
+      // Preparar mensagem do WhatsApp
+      const mensagem = encodeURIComponent(
+        `📋 *ORDEM DE SERVIÇO BRISANET*\n\n` +
+        `👤 *Cliente:* ${nomeCliente}\n` +
+        `📄 *Protocolo:* ${protocolo}\n` +
+        `👨‍🔧 *Técnico:* ${tecnico}\n` +
+        `🌍 *Cidade:* ${cidade}\n` +
+        `📅 *Data:* ${new Date().toLocaleDateString('pt-BR', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        })}\n` +
+        `🕐 *Hora:* ${new Date().toLocaleTimeString('pt-BR', { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        })}\n\n` +
+        `✅ Ordem de serviço preenchida e enviada automaticamente.\n` +
+        `📎 PDF anexado com todos os detalhes.\n\n` +
+        `*🌐 Brisanet - Conectando você ao futuro*`
+      );
+
+      // Gerar PDF e depois abrir WhatsApp
+      gerarPDFParaWhatsApp().then(pdfGerado => {
+        setTimeout(() => {
           hideLoading();
           
-          // Abrir WhatsApp após pequeno delay
-          setTimeout(() => {
-            abrirWhatsApp();
-          }, 500);
+          if (pdfGerado) {
+            showToast('PDF gerado com sucesso!');
+            
+            // Abrir WhatsApp após pequeno delay
+            setTimeout(() => {
+              abrirWhatsApp(mensagem);
+            }, 1000);
+            
+          } else {
+            showToast('Erro ao gerar PDF. Tente novamente.', 'error');
+          }
+        }, 1500);
+      });
+    }
+
+    function abrirWhatsApp(mensagem) {
+      const os = getOS();
+      let whatsappURL;
+      let fallbackURL;
+      
+      if (os === 'iOS') {
+        whatsappURL = `whatsapp://send?text=${mensagem}`;
+        fallbackURL = `https://wa.me/?text=${mensagem}`;
+      } else if (os === 'Android') {
+        whatsappURL = `intent://send?text=${mensagem}#Intent;package=com.whatsapp;scheme=whatsapp;launchFlags=0x10000000;end`;
+        fallbackURL = `https://wa.me/?text=${mensagem}`;
+      } else {
+        whatsappURL = `https://web.whatsapp.com/send?text=${mensagem}`;
+        fallbackURL = null;
+      }
+
+      if (isMobile() && fallbackURL) {
+        // Tentar abrir app nativo primeiro
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = whatsappURL;
+        document.body.appendChild(iframe);
+        
+        // Fallback para navegador após 2 segundos
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+          window.open(fallbackURL, '_blank');
           
-          // Instruções para o usuário
+          // Mostrar instruções
           setTimeout(() => {
-            const os = getOS();
-            let instrucao;
+            const instrucoes = isMobile() ? 
+              '📱 WhatsApp aberto!\n\n✅ PDF baixado automaticamente\n📎 Anexe o arquivo no chat\n💬 Mensagem pronta para envio!' :
+              '💻 WhatsApp Web aberto!\n\n✅ PDF baixado\n📎 Anexe o arquivo manualmente\n💬 Mensagem pronta!';
             
-            if (os === 'iOS') {
-              instrucao = '📱 WhatsApp aberto no iOS!\n\n' +
-                         '✅ PDF baixado automaticamente\n' +
-                         '📎 Anexe o arquivo PDF no chat\n' +
-                         '💡 Mensagem já está pronta!';
-            } else if (os === 'Android') {
-              instrucao = '📱 WhatsApp aberto no Android!\n\n' +
-                         '✅ PDF baixado automaticamente\n' +
-                         '📎 Anexe o arquivo PDF no chat\n' +
-                         '💡 Mensagem já está pronta!';
-            } else {
-              instrucao = '💻 WhatsApp Web aberto!\n\n' +
-                         '✅ PDF baixado automaticamente\n' +
-                         '📎 Anexe o arquivo PDF manualmente\n' +
-                         '💡 Mensagem já está pronta!';
-            }
-            
-            alert(instrucao);
-          }, 1500);
-        })
-        .catch((error) => {
-          console.error('Erro:', error);
-          hideLoading();
-          alert('Erro ao preparar envio. Tente novamente.');
-        })
-        .finally(() => {
-          restaurarInputs(substituidos);
-        });
+            showToast('Instruções enviadas para o WhatsApp!');
+            console.log(instrucoes);
+          }, 1000);
+        }, 2000);
+        
+      } else {
+        window.open(whatsappURL, '_blank');
+        showToast('WhatsApp aberto! Anexe o PDF baixado.');
+      }
     }
 
     // Auto-preencher data atual
@@ -647,18 +700,38 @@
       document.getElementById('dia').value = dia;
       document.getElementById('mes').value = mes;
       document.getElementById('ano').value = ano;
+      document.getElementById('cidade').value = 'Fortaleza'; // Valor padrão baseado na localização
     }
 
     // Inicializar quando a página carregar
     document.addEventListener('DOMContentLoaded', function() {
-      ajustarParaMobile();
+      otimizarParaMobile();
       preencherDataAtual();
       
       // Verificar se o html2pdf foi carregado
       if (typeof html2pdf === 'undefined') {
         console.error('html2pdf não foi carregado corretamente');
+        showToast('Erro ao carregar componentes. Recarregue a página.', 'error');
+      } else {
+        showToast('Formulário carregado com sucesso!');
       }
+
+      // Adicionar eventos de teclado para melhor navegação
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && e.target.classList.contains('campo')) {
+          const campos = Array.from(document.querySelectorAll('.campo[type="text"]'));
+          const currentIndex = campos.indexOf(e.target);
+          if (currentIndex < campos.length - 1) {
+            campos[currentIndex + 1].focus();
+          }
+        }
+      });
     });
+
+    // Prevenir zoom no iOS quando focar em inputs
+    if (getOS() === 'iOS') {
+      document.addEventListener('touchstart', function() {}, {passive: true});
+    }
   </script>
 </body>
 </html>

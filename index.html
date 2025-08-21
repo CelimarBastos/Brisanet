@@ -79,7 +79,7 @@
         gap: 10px;
       }
       
-      .pdf-button, .whatsapp-button {
+      .pdf-button, .whatsapp-button, .print-button {
         width: 100%;
         min-width: auto;
         margin: 0;
@@ -113,7 +113,7 @@
       z-index: 1000;
     }
 
-    .pdf-button {
+    .pdf-button, .print-button {
       padding: 12px 24px;
       font-size: 16px;
       background: #007bff;
@@ -124,9 +124,10 @@
       transition: background 0.3s;
       display: inline-block;
       min-width: 200px;
+      margin: 5px;
     }
 
-    .pdf-button:hover:not(:disabled) {
+    .pdf-button:hover:not(:disabled), .print-button:hover:not(:disabled) {
       background: #0056b3;
     }
 
@@ -141,16 +142,24 @@
       transition: background 0.3s;
       display: inline-block;
       min-width: 200px;
-      margin-left: 10px;
+      margin: 5px;
     }
 
     .whatsapp-button:hover:not(:disabled) {
       background: #1DA851;
     }
 
-    .whatsapp-button:disabled {
+    .whatsapp-button:disabled, .pdf-button:disabled, .print-button:disabled {
       background: #6c757d;
       cursor: not-allowed;
+    }
+
+    .print-button {
+      background: #6c757d;
+    }
+
+    .print-button:hover:not(:disabled) {
+      background: #5a6268;
     }
 
     /* Para garantir que tudo fique em uma página no PDF */
@@ -173,60 +182,101 @@
         display: none;
       }
     }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      color: white;
+      font-size: 18px;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
+  <!-- Overlay de loading -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div style="text-align: center;">
+      <div class="spinner"></div>
+      <div id="loadingText">Processando...</div>
+    </div>
+  </div>
+
   <div class="container" id="formulario-pdf">
     <img src="ordem-servico.JPG" alt="Imagem da Ordem de Serviço" class="imagem-fundo" id="imagemOrdem">
     
     <!-- Campos sobrepostos -->
-    <input type="text" class="campo" style="top: 230px; left: 508px; width: 228px;" placeholder="Nome do cliente">
-    <input type="text" class="campo" style="top: 255px; left: 575px; width: 150px;" placeholder="CPF">
+    <input type="text" class="campo" style="top: 230px; left: 508px; width: 228px;" placeholder="Nome do cliente" id="nomeCliente">
+    <input type="text" class="campo" style="top: 255px; left: 575px; width: 150px;" placeholder="CPF" id="cpfCliente">
     
     <!-- Serviços cancelados -->
-    <input type="checkbox" class="campo" style="top: 322px; left: 190px;">
-    <input type="checkbox" class="campo" style="top: 322px; left: 336px;">
-    <input type="checkbox" class="campo" style="top: 322px; left: 488px;">
-    <input type="checkbox" class="campo" style="top: 322px; left: 568px;">
+    <input type="checkbox" class="campo" style="top: 322px; left: 190px;" id="servico1">
+    <input type="checkbox" class="campo" style="top: 322px; left: 336px;" id="servico2">
+    <input type="checkbox" class="campo" style="top: 322px; left: 488px;" id="servico3">
+    <input type="checkbox" class="campo" style="top: 322px; left: 568px;" id="servico4">
     
     <!-- Equipamentos -->
-    <input type="checkbox" class="campo" style="top: 419px; left: 150px;">
-    <input type="text" class="campo" style="top: 413px; left: 218px; width: 450px;" placeholder="MAC ONU">
-    <input type="checkbox" class="campo" style="top: 454px; left: 203px;">
-    <input type="text" class="campo" style="top: 450px; left: 266px; width: 401px;" placeholder="MAC Receptor">
-    <input type="checkbox" class="campo" style="top: 506px; left: 183px;">
-    <input type="text" class="campo" style="top: 502px; left: 236px; width: 430px;" placeholder="N/S Roteador">
-    <input type="checkbox" class="campo" style="top: 538px; left: 178px;">
-    <input type="text" class="campo" style="top: 533px; left: 235px; width: 432px;" placeholder="N/S Telefone">
+    <input type="checkbox" class="campo" style="top: 419px; left: 150px;" id="equipONU">
+    <input type="text" class="campo" style="top: 413px; left: 218px; width: 450px;" placeholder="MAC ONU" id="macONU">
+    
+    <input type="checkbox" class="campo" style="top: 454px; left: 203px;" id="equipReceptor">
+    <input type="text" class="campo" style="top: 450px; left: 266px; width: 401px;" placeholder="MAC Receptor" id="macReceptor">
+    
+    <input type="checkbox" class="campo" style="top: 506px; left: 183px;" id="equipRoteador">
+    <input type="text" class="campo" style="top: 502px; left: 236px; width: 430px;" placeholder="N/S Roteador" id="nsRoteador">
+    
+    <input type="checkbox" class="campo" style="top: 538px; left: 178px;" id="equipTelefone">
+    <input type="text" class="campo" style="top: 533px; left: 235px; width: 432px;" placeholder="N/S Telefone" id="nsTelefone">
     
     <!-- Os kits estão completos -->
-    <input type="text" class="campo" style="top: 593px; left: 153px; width: 300px;" placeholder="Os kits estão completos">
-    <input type="checkbox" class="campo" style="top: 572px; left: 315px;">
-    <input type="checkbox" class="campo" style="top: 572px; left: 372px;">
+    <input type="text" class="campo" style="top: 593px; left: 153px; width: 300px;" placeholder="Os kits estão completos" id="kitsTexto">
+    <input type="checkbox" class="campo" style="top: 572px; left: 315px;" id="kitsCompletos">
+    <input type="checkbox" class="campo" style="top: 572px; left: 372px;" id="kitsIncompletos">
     
     <!-- Os Equipamentos estão em bom estado de conservação -->
-    <input type="text" class="campo" style="top: 693px; left: 149px; width: 300px;" placeholder="Os Equipamentos estão em bom estado de conservação">
-    <input type="checkbox" class="campo" style="top: 662px; left: 532px;">
-    <input type="checkbox" class="campo" style="top: 662px; left: 592px;">
+    <input type="text" class="campo" style="top: 693px; left: 149px; width: 300px;" placeholder="Os Equipamentos estão em bom estado de conservação" id="estadoTexto">
+    <input type="checkbox" class="campo" style="top: 662px; left: 532px;" id="bomEstado">
+    <input type="checkbox" class="campo" style="top: 662px; left: 592px;" id="mauEstado">
     
     <!-- Informações finais -->
-    <input type="text" class="campo" style="top: 783px; left: 280px; width: 300px;" placeholder="Protocolo">
-    <input type="text" class="campo" style="top: 832px; left: 280px; width: 300px;" placeholder="Técnico responsável">
-    <input type="text" class="campo" style="top: 882px; left: 280px; width: 300px;" placeholder="Responsável pela devolução">
-    <input type="text" class="campo" style="top: 928px; left: 280px; width: 300px;" placeholder="Parentesco">
+    <input type="text" class="campo" style="top: 783px; left: 280px; width: 300px;" placeholder="Protocolo" id="protocolo">
+    <input type="text" class="campo" style="top: 832px; left: 280px; width: 300px;" placeholder="Técnico responsável" id="tecnico">
+    <input type="text" class="campo" style="top: 882px; left: 280px; width: 300px;" placeholder="Responsável pela devolução" id="responsavel">
+    <input type="text" class="campo" style="top: 928px; left: 280px; width: 300px;" placeholder="Parentesco" id="parentesco">
     
-    <!-- Local e data e Ano -->
-    <input type="text" class="campo" style="top: 989px; left: 217px; width: 80px;" placeholder="Cidade">
-    <input type="text" class="campo" style="top: 989px; left: 312px; width: 35px;" placeholder="Dia">
-    <input type="text" class="campo" style="top: 989px; left: 370px; width: 150px;" placeholder="Mês">
-    <input type="text" class="campo" style="top: 989px; left: 555px; width: 63px;" placeholder="Ano">
+    <!-- Local e data -->
+    <input type="text" class="campo" style="top: 989px; left: 217px; width: 80px;" placeholder="Cidade" id="cidade">
+    <input type="text" class="campo" style="top: 989px; left: 312px; width: 35px;" placeholder="Dia" id="dia">
+    <input type="text" class="campo" style="top: 989px; left: 370px; width: 150px;" placeholder="Mês" id="mes">
+    <input type="text" class="campo" style="top: 989px; left: 555px; width: 63px;" placeholder="Ano" id="ano">
   </div>
   
-  <!-- Botão movido para fora do container -->
+  <!-- Botões -->
   <div class="button-container">
-    <button onclick="gerarPDF()" class="pdf-button">📄 Baixar como PDF</button>
-    <button onclick="enviarWhatsApp()" class="whatsapp-button">📱 Enviar WhatsApp</button>
-    <button onclick="imprimirFormulario()" class="pdf-button" style="background: #6c757d;">🖨️ Imprimir</button>
+    <button onclick="gerarPDF()" class="pdf-button" id="btnPDF">📄 Baixar como PDF</button>
+    <button onclick="enviarWhatsApp()" class="whatsapp-button" id="btnWhatsApp">📱 Enviar WhatsApp</button>
+    <button onclick="imprimirFormulario()" class="print-button" id="btnImprimir">🖨️ Imprimir</button>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -236,10 +286,23 @@
       return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
 
+    // Mostrar loading
+    function showLoading(text = 'Processando...') {
+      const overlay = document.getElementById('loadingOverlay');
+      const loadingText = document.getElementById('loadingText');
+      loadingText.textContent = text;
+      overlay.style.display = 'flex';
+    }
+
+    // Esconder loading
+    function hideLoading() {
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.style.display = 'none';
+    }
+
     // Ajustar para mobile quando carregar a página
     function ajustarParaMobile() {
       if (isMobile()) {
-        const container = document.getElementById('formulario-pdf');
         const campos = document.querySelectorAll('.campo');
         
         // Melhorar visibilidade dos campos no mobile
@@ -249,10 +312,8 @@
           if (campo.type === 'text') {
             campo.style.minWidth = '60px';
           }
-        });
 
-        // Adicionar evento de zoom nos campos para mobile
-        campos.forEach(campo => {
+          // Adicionar evento de zoom nos campos para mobile
           campo.addEventListener('focus', function() {
             this.style.transform = 'scale(1.1)';
             this.style.zIndex = '1000';
@@ -267,21 +328,10 @@
       }
     }
 
-    function gerarPDF() {
+    function prepararParaPDF() {
       const container = document.getElementById('formulario-pdf');
       const inputs = container.querySelectorAll('input');
       const substituidos = [];
-
-      // Forçar redimensionamento do container (ajustado para mobile)
-      if (isMobile()) {
-        container.style.transform = 'scale(0.6)';
-        container.style.transformOrigin = 'top left';
-      } else {
-        container.style.transform = 'scale(0.75)';
-        container.style.transformOrigin = 'top left';
-      }
-      container.style.width = '210mm';
-      container.style.maxHeight = '297mm';
 
       // Replace inputs with spans for PDF generation
       inputs.forEach(input => {
@@ -289,283 +339,227 @@
         
         // Handle different input types
         if (input.type === 'checkbox') {
-          span.textContent = input.checked ? '✓' : '';
-          span.style.fontSize = '14px'; // Reduced size
+          span.textContent = input.checked ? '✓' : '☐';
+          span.style.fontSize = '16px';
+          span.style.fontWeight = 'bold';
+          span.style.color = input.checked ? '#007bff' : '#ccc';
         } else {
-          span.textContent = input.value || '__________';
-          span.style.fontSize = '12px'; // Reduced size
+          span.textContent = input.value || '_'.repeat(20);
+          span.style.fontSize = '12px';
+          span.style.fontWeight = 'bold';
         }
         
         // Copy all relevant styles
-        span.className = 'campo';
         span.style.position = 'absolute';
         span.style.top = input.style.top;
         span.style.left = input.style.left;
         span.style.width = input.style.width;
-        span.style.color = '#000';
-        span.style.fontWeight = 'bold';
+        span.style.color = span.style.color || '#000';
         span.style.fontFamily = 'Arial, sans-serif';
         span.style.padding = '2px';
         span.style.border = 'none';
         span.style.background = 'transparent';
+        span.style.lineHeight = '1.2';
+        span.style.display = 'inline-block';
         
         container.appendChild(span);
         substituidos.push({ original: input, substituto: span });
         input.style.display = 'none';
       });
 
-      // PDF generation options - configured for single page
+      return substituidos;
+    }
+
+    function restaurarInputs(substituidos) {
+      substituidos.forEach(({ original, substituto }) => {
+        substituto.remove();
+        original.style.display = '';
+      });
+    }
+
+    function gerarPDF() {
+      showLoading('Gerando PDF...');
+      
+      try {
+        const container = document.getElementById('formulario-pdf');
+        const substituidos = prepararParaPDF();
+
+        // PDF generation options
+        const opt = {
+          margin: 10,
+          filename: `ordem-servico-${new Date().toISOString().split('T')[0]}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { 
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff',
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: container.scrollWidth,
+            windowHeight: container.scrollHeight
+          },
+          jsPDF: { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait' 
+          }
+        };
+
+        // Generate and download PDF
+        html2pdf().set(opt).from(container).save()
+          .then(() => {
+            console.log('PDF gerado com sucesso!');
+            hideLoading();
+          })
+          .catch((error) => {
+            console.error('Erro ao gerar PDF:', error);
+            alert('Erro ao gerar PDF. Tente novamente.');
+            hideLoading();
+          })
+          .finally(() => {
+            restaurarInputs(substituidos);
+          });
+      } catch (error) {
+        console.error('Erro geral:', error);
+        alert('Erro inesperado. Tente novamente.');
+        hideLoading();
+      }
+    }
+
+    function imprimirFormulario() {
+      showLoading('Preparando para impressão...');
+      
+      const container = document.getElementById('formulario-pdf');
+      const substituidos = prepararParaPDF();
+
+      setTimeout(() => {
+        hideLoading();
+        window.print();
+        
+        setTimeout(() => {
+          restaurarInputs(substituidos);
+        }, 1000);
+      }, 500);
+    }
+
+    function enviarWhatsApp() {
+      showLoading('Preparando envio...');
+      
+      const nomeCliente = document.getElementById('nomeCliente').value || 'Cliente';
+      const protocolo = document.getElementById('protocolo').value || 'N/A';
+      const tecnico = document.getElementById('tecnico').value || 'N/A';
+      
+      const mensagem = encodeURIComponent(
+        `📋 *Ordem de Serviço Brisanet*\n\n` +
+        `👤 Cliente: ${nomeCliente}\n` +
+        `📄 Protocolo: ${protocolo}\n` +
+        `👨‍🔧 Técnico: ${tecnico}\n` +
+        `📅 Data: ${new Date().toLocaleDateString('pt-BR')}\n\n` +
+        `✅ Ordem de serviço preenchida e pronta para envio.\n\n` +
+        `*Brisanet - Conectando você ao futuro*`
+      );
+
+      // Gerar PDF primeiro
+      const container = document.getElementById('formulario-pdf');
+      const substituidos = prepararParaPDF();
+
       const opt = {
-        margin: [5, 5, 5, 5],
-        filename: `ordem-de-servico-${new Date().toISOString().split('T')[0]}.pdf`,
-        image: { type: 'JPEG', quality: 0.85 },
+        margin: 10,
+        filename: `ordem-servico-${nomeCliente.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
-          scale: 1,
+          scale: 2,
           useCORS: true,
           allowTaint: true,
-          height: container.offsetHeight,
-          width: container.offsetWidth,
-          scrollX: 0,
-          scrollY: 0
+          backgroundColor: '#ffffff'
         },
         jsPDF: { 
           unit: 'mm', 
           format: 'a4', 
-          orientation: 'portrait'
-        },
-        pagebreak: { mode: 'avoid-all', before: '.new-page' }
+          orientation: 'portrait' 
+        }
       };
 
-      // Show loading indicator
-      const button = document.querySelector('.pdf-button');
-      const originalText = button.textContent;
-      button.textContent = '⏳ Gerando PDF...';
-      button.disabled = true;
-
-      // Generate PDF
       html2pdf().set(opt).from(container).save()
         .then(() => {
-          console.log('PDF gerado com sucesso!');
+          // Preparar URL do WhatsApp
+          let whatsappURL;
+          
+          if (isMobile()) {
+            // Para mobile, tentar abrir o app nativo do WhatsApp
+            whatsappURL = `whatsapp://send?text=${mensagem}`;
+          } else {
+            // Para desktop, usar WhatsApp Web
+            whatsappURL = `https://web.whatsapp.com/send?text=${mensagem}`;
+          }
+          
+          // Abrir WhatsApp
+          const whatsappWindow = window.open(whatsappURL, '_blank');
+          
+          // Fallback para WhatsApp Web se o app não abrir
+          if (isMobile()) {
+            setTimeout(() => {
+              if (!document.hidden) {
+                // Se ainda estamos na página, o app não abriu, tentar WhatsApp Web
+                window.open(`https://web.whatsapp.com/send?text=${mensagem}`, '_blank');
+              }
+            }, 2000);
+          }
+          
+          hideLoading();
+          
+          // Instruções para o usuário
+          setTimeout(() => {
+            const instrucao = isMobile() ? 
+              '📱 WhatsApp aberto!\n\n' +
+              '✅ PDF baixado automaticamente\n' +
+              '📎 Anexe o arquivo PDF no chat\n' +
+              '💡 Mensagem já está pronta!' :
+              '💻 WhatsApp Web aberto!\n\n' +
+              '✅ PDF baixado automaticamente\n' +
+              '📎 Anexe o arquivo PDF manualmente\n' +
+              '💡 Mensagem já está pronta!';
+            
+            alert(instrucao);
+          }, 1000);
         })
         .catch((error) => {
-          console.error('Erro ao gerar PDF:', error);
-          alert('Ocorreu um erro ao gerar o PDF. Tente novamente.');
+          console.error('Erro:', error);
+          hideLoading();
+          alert('Erro ao preparar envio. Tente novamente.');
         })
         .finally(() => {
-          // Restore original inputs and container
-          substituidos.forEach(({ original, substituto }) => {
-            substituto.remove();
-            original.style.display = '';
-          });
-          
-          // Restore container size
-          container.style.transform = '';
-          container.style.transformOrigin = '';
-          container.style.width = '';
-          container.style.maxHeight = '';
-          
-          // Restore button
-          button.textContent = originalText;
-          button.disabled = false;
-    // Função alternativa para imprimir (fallback)
-    function imprimirFormulario() {
-      const container = document.getElementById('formulario-pdf');
-      const inputs = container.querySelectorAll('input');
-      const substituidos = [];
-
-      // Replace inputs with spans for printing
-      inputs.forEach(input => {
-        const span = document.createElement('span');
-        
-        if (input.type === 'checkbox') {
-          span.textContent = input.checked ? '✓' : '';
-          span.style.fontSize = '14px';
-        } else {
-          span.textContent = input.value || '__________';
-          span.style.fontSize = '12px';
-        }
-        
-        span.className = 'campo';
-        span.style.position = 'absolute';
-        span.style.top = input.style.top;
-        span.style.left = input.style.left;
-        span.style.width = input.style.width;
-        span.style.color = '#000';
-        span.style.fontWeight = 'bold';
-        span.style.fontFamily = 'Arial, sans-serif';
-        span.style.padding = '2px';
-        span.style.border = 'none';
-        span.style.background = 'transparent';
-        
-        container.appendChild(span);
-        substituidos.push({ original: input, substituto: span });
-        input.style.display = 'none';
-      });
-
-      // Trigger print dialog
-      window.print();
-
-      // Restore after print
-      setTimeout(() => {
-        substituidos.forEach(({ original, substituto }) => {
-          substituto.remove();
-          original.style.display = '';
+          restaurarInputs(substituidos);
         });
-      }, 1000);
+    }
+
+    // Auto-preencher data atual
+    function preencherDataAtual() {
+      const hoje = new Date();
+      const dia = String(hoje.getDate()).padStart(2, '0');
+      const meses = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+      ];
+      const mes = meses[hoje.getMonth()];
+      const ano = hoje.getFullYear();
+
+      document.getElementById('dia').value = dia;
+      document.getElementById('mes').value = mes;
+      document.getElementById('ano').value = ano;
     }
 
     // Inicializar quando a página carregar
     document.addEventListener('DOMContentLoaded', function() {
       ajustarParaMobile();
-    });
-
-    // Limpar dados quando a página for fechada
-    window.addEventListener('beforeunload', function() {
-      // Limpar qualquer dado salvo anteriormente
-      localStorage.removeItem('formulario_brisanet');
-    });
-
-    function enviarWhatsApp() {
-      const container = document.getElementById('formulario-pdf');
-      const inputs = container.querySelectorAll('input');
-      const substituidos = [];
-
-      // Forçar redimensionamento do container (ajustado para mobile)
-      if (isMobile()) {
-        container.style.transform = 'scale(0.6)';
-        container.style.transformOrigin = 'top left';
-      } else {
-        container.style.transform = 'scale(0.75)';
-        container.style.transformOrigin = 'top left';
+      preencherDataAtual();
+      
+      // Verificar se o html2pdf foi carregado
+      if (typeof html2pdf === 'undefined') {
+        console.error('html2pdf não foi carregado corretamente');
       }
-      container.style.width = '210mm';
-      container.style.maxHeight = '297mm';
-
-      // Replace inputs with spans for PDF generation
-      inputs.forEach(input => {
-        const span = document.createElement('span');
-        
-        // Handle different input types
-        if (input.type === 'checkbox') {
-          span.textContent = input.checked ? '✓' : '';
-          span.style.fontSize = '14px';
-        } else {
-          span.textContent = input.value || '__________';
-          span.style.fontSize = '12px';
-        }
-        
-        // Copy all relevant styles
-        span.className = 'campo';
-        span.style.position = 'absolute';
-        span.style.top = input.style.top;
-        span.style.left = input.style.left;
-        span.style.width = input.style.width;
-        span.style.color = '#000';
-        span.style.fontWeight = 'bold';
-        span.style.fontFamily = 'Arial, sans-serif';
-        span.style.padding = '2px';
-        span.style.border = 'none';
-        span.style.background = 'transparent';
-        
-        container.appendChild(span);
-        substituidos.push({ original: input, substituto: span });
-        input.style.display = 'none';
-      });
-
-      // PDF generation options
-      const opt = {
-        margin: [5, 5, 5, 5],
-        filename: `ordem-de-servico-${new Date().toISOString().split('T')[0]}.pdf`,
-        image: { type: 'JPEG', quality: 0.85 },
-        html2canvas: { 
-          scale: 1,
-          useCORS: true,
-          allowTaint: true,
-          height: container.offsetHeight,
-          width: container.offsetWidth,
-          scrollX: 0,
-          scrollY: 0
-        },
-        jsPDF: { 
-          unit: 'mm', 
-          format: 'a4', 
-          orientation: 'portrait'
-        },
-        pagebreak: { mode: 'avoid-all', before: '.new-page' }
-      };
-
-      // Show loading indicator
-      const button = document.querySelector('.whatsapp-button');
-      const originalText = button.textContent;
-      button.textContent = '⏳ Enviando...';
-      button.disabled = true;
-
-      // Generate PDF and prepare for WhatsApp
-      html2pdf().set(opt).from(container).outputPdf('datauristring')
-        .then((pdfData) => {
-          // Restore original inputs and container
-          substituidos.forEach(({ original, substituto }) => {
-            substituto.remove();
-            original.style.display = '';
-          });
-          
-          // Restore container size
-          container.style.transform = '';
-          container.style.transformOrigin = '';
-          container.style.width = '';
-          container.style.maxHeight = '';
-          
-          // Prepare WhatsApp message
-          const nomeCliente = inputs[0].value || 'Cliente';
-          const protocolo = inputs[inputs.length - 5].value || 'N/A';
-          
-          const mensagem = encodeURIComponent(
-            `📋 *Ordem de Serviço Brisanet*\n\n` +
-            `👤 Cliente: ${nomeCliente}\n` +
-            `📄 Protocolo: ${protocolo}\n` +
-            `📅 Data: ${new Date().toLocaleDateString('pt-BR')}\n\n` +
-            `🔗 Segue em anexo a ordem de serviço em PDF.\n\n` +
-            `*Brisanet - Conectando você ao futuro*`
-          );
-
-          // Open WhatsApp Web with message
-          // Note: WhatsApp Web doesn't support file attachment directly
-          // This will open WhatsApp with the message, user needs to manually attach the PDF
-          const whatsappURL = `https://web.whatsapp.com/send?text=${mensagem}`;
-          
-          // Para mobile, usar WhatsApp app em vez de web
-          let whatsappURL;
-          if (isMobile()) {
-            whatsappURL = `whatsapp://send?text=${mensagem}`;
-          } else {
-            whatsappURL = `https://web.whatsapp.com/send?text=${mensagem}`;
-          }
-          
-          // Open WhatsApp
-          window.open(whatsappURL, '_blank');
-          
-          // Also download the PDF for manual attachment
-          html2pdf().set(opt).from(container).save();
-          
-          // Show instruction to user
-          setTimeout(() => {
-            const instrucao = isMobile() ? 
-              '📱 WhatsApp aberto!\n\n✅ O PDF foi baixado automaticamente.\n📎 Anexe o arquivo PDF no chat.\n\n💡 A mensagem já está pronta para enviar!' :
-              '📱 WhatsApp Web aberto!\n\n✅ O PDF foi baixado automaticamente.\n📎 Anexe o arquivo PDF manualmente no WhatsApp.\n\n💡 A mensagem já está pronta para enviar!';
-            alert(instrucao);
-          }, 1000);
-          
-        })
-        .catch((error) => {
-          console.error('Erro ao gerar PDF para WhatsApp:', error);
-          alert('Ocorreu um erro ao preparar o envio. Tente novamente.');
-        })
-        .finally(() => {
-          // Restore button
-          button.textContent = originalText;
-          button.disabled = false;
-        });
-    }
+    });
   </script>
 </body>
 </html>

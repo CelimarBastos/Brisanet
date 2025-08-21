@@ -283,7 +283,23 @@
   <script>
     // Detectar se é dispositivo móvel
     function isMobile() {
-      return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPad no Safari
+    }
+
+    // Detectar sistema operacional
+    function getOS() {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      
+      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return 'iOS';
+      }
+      
+      if (/android/i.test(userAgent)) {
+        return 'Android';
+      }
+      
+      return 'Other';
     }
 
     // Mostrar loading
@@ -460,7 +476,82 @@
         `*Brisanet - Conectando você ao futuro*`
       );
 
-      // Gerar PDF primeiro
+      // Função para abrir WhatsApp
+      function abrirWhatsApp() {
+        const os = getOS();
+        let whatsappURL;
+        let fallbackURL;
+        
+        if (os === 'iOS') {
+          // iOS - tentar app nativo primeiro
+          whatsappURL = `whatsapp://send?text=${mensagem}`;
+          fallbackURL = `https://wa.me/?text=${mensagem}`;
+        } else if (os === 'Android') {
+          // Android - tentar app nativo primeiro
+          whatsappURL = `intent://send?text=${mensagem}#Intent;package=com.whatsapp;scheme=whatsapp;launchFlags=0x10000000;end`;
+          fallbackURL = `https://wa.me/?text=${mensagem}`;
+        } else {
+          // Desktop ou outros - direto para WhatsApp Web
+          whatsappURL = `https://web.whatsapp.com/send?text=${mensagem}`;
+          fallbackURL = null;
+        }
+
+        // Tentar abrir o app nativo
+        if (isMobile() && fallbackURL) {
+          // Criar link invisível para tentar abrir o app
+          const link = document.createElement('a');
+          link.href = whatsappURL;
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          
+          let appOpened = false;
+          
+          // Detectar se o app foi aberto
+          const startTime = Date.now();
+          
+          // Tentar clicar no link
+          link.click();
+          
+          // Fallback após 2.5 segundos se o app não abriu
+          const fallbackTimer = setTimeout(() => {
+            if (!appOpened && (Date.now() - startTime) < 3000) {
+              console.log('App não abriu, tentando fallback...');
+              window.open(fallbackURL, '_blank');
+            }
+          }, 2500);
+          
+          // Detectar se a página perdeu foco (indica que app abriu)
+          const onBlur = () => {
+            appOpened = true;
+            clearTimeout(fallbackTimer);
+            window.removeEventListener('blur', onBlur);
+          };
+          
+          const onFocus = () => {
+            setTimeout(() => {
+              if (!appOpened && (Date.now() - startTime) > 1000) {
+                console.log('Voltou para página, tentando fallback...');
+                window.open(fallbackURL, '_blank');
+              }
+            }, 100);
+            window.removeEventListener('focus', onFocus);
+          };
+          
+          window.addEventListener('blur', onBlur);
+          window.addEventListener('focus', onFocus);
+          
+          // Limpar link após 5 segundos
+          setTimeout(() => {
+            document.body.removeChild(link);
+          }, 5000);
+          
+        } else {
+          // Desktop ou fallback direto
+          window.open(whatsappURL, '_blank');
+        }
+      }
+
+      // Gerar PDF primeiro, depois abrir WhatsApp
       const container = document.getElementById('formulario-pdf');
       const substituidos = prepararParaPDF();
 
@@ -483,46 +574,37 @@
 
       html2pdf().set(opt).from(container).save()
         .then(() => {
-          // Preparar URL do WhatsApp
-          let whatsappURL;
-          
-          if (isMobile()) {
-            // Para mobile, tentar abrir o app nativo do WhatsApp
-            whatsappURL = `whatsapp://send?text=${mensagem}`;
-          } else {
-            // Para desktop, usar WhatsApp Web
-            whatsappURL = `https://web.whatsapp.com/send?text=${mensagem}`;
-          }
-          
-          // Abrir WhatsApp
-          const whatsappWindow = window.open(whatsappURL, '_blank');
-          
-          // Fallback para WhatsApp Web se o app não abrir
-          if (isMobile()) {
-            setTimeout(() => {
-              if (!document.hidden) {
-                // Se ainda estamos na página, o app não abriu, tentar WhatsApp Web
-                window.open(`https://web.whatsapp.com/send?text=${mensagem}`, '_blank');
-              }
-            }, 2000);
-          }
-          
           hideLoading();
+          
+          // Abrir WhatsApp após pequeno delay
+          setTimeout(() => {
+            abrirWhatsApp();
+          }, 500);
           
           // Instruções para o usuário
           setTimeout(() => {
-            const instrucao = isMobile() ? 
-              '📱 WhatsApp aberto!\n\n' +
-              '✅ PDF baixado automaticamente\n' +
-              '📎 Anexe o arquivo PDF no chat\n' +
-              '💡 Mensagem já está pronta!' :
-              '💻 WhatsApp Web aberto!\n\n' +
-              '✅ PDF baixado automaticamente\n' +
-              '📎 Anexe o arquivo PDF manualmente\n' +
-              '💡 Mensagem já está pronta!';
+            const os = getOS();
+            let instrucao;
+            
+            if (os === 'iOS') {
+              instrucao = '📱 WhatsApp aberto no iOS!\n\n' +
+                         '✅ PDF baixado automaticamente\n' +
+                         '📎 Anexe o arquivo PDF no chat\n' +
+                         '💡 Mensagem já está pronta!';
+            } else if (os === 'Android') {
+              instrucao = '📱 WhatsApp aberto no Android!\n\n' +
+                         '✅ PDF baixado automaticamente\n' +
+                         '📎 Anexe o arquivo PDF no chat\n' +
+                         '💡 Mensagem já está pronta!';
+            } else {
+              instrucao = '💻 WhatsApp Web aberto!\n\n' +
+                         '✅ PDF baixado automaticamente\n' +
+                         '📎 Anexe o arquivo PDF manualmente\n' +
+                         '💡 Mensagem já está pronta!';
+            }
             
             alert(instrucao);
-          }, 1000);
+          }, 1500);
         })
         .catch((error) => {
           console.error('Erro:', error);

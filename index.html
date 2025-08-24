@@ -1,1 +1,700 @@
-https://celimarbastos.github.io/Formulario-Brisanet/
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3.0">
+  <title>Formulário Brisanet</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 8px;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      font-size: 14px;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .imagem-fundo {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      max-width: 100%;
+    }
+
+    .campo {
+      position: absolute;
+      font-size: 11px;
+      padding: 2px 4px;
+      border: 2px solid #007bff;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.98);
+      font-family: 'Arial', sans-serif;
+      min-height: 18px;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+
+    .campo:focus {
+      border-color: #0056b3;
+      outline: none;
+      background: white;
+      z-index: 1000;
+      transform: scale(1.05);
+      box-shadow: 0 2px 10px rgba(0,123,255,0.3);
+    }
+
+    /* Checkboxes customizados */
+    input[type="checkbox"].campo {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      border: 2px solid #007bff;
+      border-radius: 3px;
+      background: white;
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    input[type="checkbox"].campo:checked {
+      background: #007bff;
+      border-color: #0056b3;
+    }
+
+    input[type="checkbox"].campo:checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    input[type="checkbox"].campo:focus {
+      transform: scale(1.1);
+      box-shadow: 0 0 8px rgba(0,123,255,0.5);
+    }
+
+    /* Responsividade avançada para mobile */
+    @media (max-width: 768px) {
+      body {
+        padding: 4px;
+        font-size: 12px;
+      }
+      
+      .container {
+        width: 100%;
+        margin: 0;
+        border-radius: 4px;
+        transform: scale(0.95);
+        transform-origin: top center;
+      }
+      
+      .campo {
+        font-size: 10px;
+        padding: 2px 3px;
+        min-height: 16px;
+        border-width: 2px;
+        min-width: 30px;
+      }
+      
+      .campo[type="text"] {
+        min-width: 50px;
+      }
+
+      input[type="checkbox"].campo {
+        width: 16px;
+        height: 16px;
+      }
+      
+      .button-container {
+        padding: 12px 8px !important;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .pdf-button, .whatsapp-button, .print-button {
+        width: 100%;
+        min-width: auto;
+        margin: 0;
+        padding: 14px 16px;
+        font-size: 14px;
+        border-radius: 6px;
+        font-weight: 500;
+      }
+    }
+
+    /* Para telas muito pequenas */
+    @media (max-width: 480px) {
+      .container {
+        transform: scale(0.88);
+        transform-origin: top left;
+        width: 114%;
+        margin-left: -7%;
+      }
+      
+      .campo {
+        font-size: 9px;
+        border-width: 1.5px;
+        min-height: 14px;
+      }
+
+      input[type="checkbox"].campo {
+        width: 14px;
+        height: 14px;
+      }
+
+      input[type="checkbox"].campo:checked::after {
+        font-size: 10px;
+      }
+    }
+
+    /* Para telas extra pequenas */
+    @media (max-width: 360px) {
+      .container {
+        transform: scale(0.82);
+        width: 122%;
+        margin-left: -11%;
+      }
+    }
+
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+      padding: 24px 16px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      width: 100%;
+      clear: both;
+      position: relative;
+      z-index: 1000;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .pdf-button, .print-button, .whatsapp-button {
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-block;
+      min-width: 180px;
+      margin: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .pdf-button {
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      color: white;
+    }
+
+    .pdf-button:hover:not(:disabled) {
+      background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+    }
+
+    .whatsapp-button {
+      background: linear-gradient(135deg, #25D366 0%, #1DA851 100%);
+      color: white;
+    }
+
+    .whatsapp-button:hover:not(:disabled) {
+      background: linear-gradient(135deg, #1DA851 0%, #128C7E 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37,211,102,0.3);
+    }
+
+    .print-button {
+      background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+      color: white;
+    }
+
+    .print-button:hover:not(:disabled) {
+      background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(108,117,125,0.3);
+    }
+
+    .whatsapp-button:disabled, .pdf-button:disabled, .print-button:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Para impressão */
+    @media print {
+      body {
+        margin: 0;
+        padding: 0;
+        background: white;
+      }
+      
+      .container {
+        page-break-inside: avoid;
+        transform: scale(0.8);
+        transform-origin: top left;
+        box-shadow: none;
+        width: 210mm;
+        max-height: 297mm;
+        border-radius: 0;
+      }
+      
+      .button-container {
+        display: none;
+      }
+
+      .campo {
+        border: 1px solid #000 !important;
+        background: transparent !important;
+      }
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      color: white;
+      font-size: 18px;
+      backdrop-filter: blur(5px);
+    }
+
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Melhorias para acessibilidade */
+    .campo:focus-visible {
+      outline: 3px solid rgba(0,123,255,0.5);
+      outline-offset: 2px;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 10000;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    .toast.error {
+      background: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <!-- Overlay de loading -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div style="text-align: center;">
+      <div class="spinner"></div>
+      <div id="loadingText">Processando...</div>
+    </div>
+  </div>
+
+  <div class="container" id="formulario-pdf">
+    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjEyMDAiIHZpZXdCb3g9IjAgMCA4MDAgMTIwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSIxMjAwIiBmaWxsPSJ3aGl0ZSIvPgo8dGV4dCB4PSI0MDAiIHk9IjEwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjM2IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzAwN2JmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QlJJU0FORVQ8L3RleHQ+Cjx0ZXh0IHg9IjQwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiMzMzMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SREVNIERFIFNFU1ZJw4dPPC90ZXh0Pgo8L3N2Zz4K" alt="Formulário Brisanet" class="imagem-fundo" id="imagemOrdem">
+    
+    <!-- Campos sobrepostos com posicionamento ajustado -->
+    <input type="text" class="campo" style="top: 19%; left: 63.5%; width: 28.5%;" placeholder="Nome do cliente" id="nomeCliente">
+    <input type="text" class="campo" style="top: 21.3%; left: 71.9%; width: 18.8%;" placeholder="CPF" id="cpfCliente">
+    
+    <!-- Serviços cancelados - checkboxes alinhados -->
+    <input type="checkbox" class="campo" style="top: 26.8%; left: 23.8%;" id="servico1" title="TV por assinatura">
+    <input type="checkbox" class="campo" style="top: 26.8%; left: 42%;" id="servico2" title="Ponto adicional TV">
+    <input type="checkbox" class="campo" style="top: 26.8%; left: 61%;" id="servico3" title="Internet">
+    <input type="checkbox" class="campo" style="top: 26.8%; left: 71%;" id="servico4" title="Telefonia">
+    
+    <!-- Equipamentos com checkboxes e campos de texto -->
+    <input type="checkbox" class="campo" style="top: 34.9%; left: 18.8%;" id="equipONU" title="ONU">
+    <input type="text" class="campo" style="top: 34.4%; left: 27.3%; width: 56.3%;" placeholder="MAC ONU" id="macONU">
+    
+    <input type="checkbox" class="campo" style="top: 37.8%; left: 25.4%;" id="equipReceptor" title="Receptor">
+    <input type="text" class="campo" style="top: 37.5%; left: 33.3%; width: 50.1%;" placeholder="MAC Receptor" id="macReceptor">
+    
+    <input type="checkbox" class="campo" style="top: 42.2%; left: 22.9%;" id="equipRoteador" title="Roteador">
+    <input type="text" class="campo" style="top: 41.8%; left: 29.5%; width: 53.8%;" placeholder="N/S Roteador" id="nsRoteador">
+    
+    <input type="checkbox" class="campo" style="top: 44.8%; left: 22.3%;" id="equipTelefone" title="Telefone">
+    <input type="text" class="campo" style="top: 44.4%; left: 29.4%; width: 54%;" placeholder="N/S Telefone" id="nsTelefone">
+    
+    <!-- Os kits estão completos -->
+    <input type="text" class="campo" style="top: 49.4%; left: 19.1%; width: 37.5%;" placeholder="Os kits estão completos" id="kitsTexto">
+    <input type="checkbox" class="campo" style="top: 47.7%; left: 39.4%;" id="kitsCompletos" title="Sim">
+    <input type="checkbox" class="campo" style="top: 47.7%; left: 46.5%;" id="kitsIncompletos" title="Não">
+    
+    <!-- Os Equipamentos estão em bom estado de conservação -->
+    <input type="text" class="campo" style="top: 57.8%; left: 18.6%; width: 37.5%;" placeholder="Os Equipamentos estão em bom estado" id="estadoTexto">
+    <input type="checkbox" class="campo" style="top: 55.2%; left: 66.5%;" id="bomEstado" title="Sim">
+    <input type="checkbox" class="campo" style="top: 55.2%; left: 74%;" id="mauEstado" title="Não">
+    
+    <!-- Informações finais -->
+    <input type="text" class="campo" style="top: 65.3%; left: 35%; width: 37.5%;" placeholder="Protocolo de atendimento" id="protocolo">
+    <input type="text" class="campo" style="top: 69.3%; left: 35%; width: 37.5%;" placeholder="Técnico responsável" id="tecnico">
+    <input type="text" class="campo" style="top: 73.5%; left: 35%; width: 37.5%;" placeholder="Responsável pela devolução" id="responsavel">
+    <input type="text" class="campo" style="top: 77.3%; left: 35%; width: 37.5%;" placeholder="Grau de parentesco" id="parentesco">
+    
+    <!-- Local e data -->
+    <input type="text" class="campo" style="top: 82.4%; left: 27.1%; width: 10%;" placeholder="Cidade" id="cidade" value="Fortaleza">
+    <input type="text" class="campo" style="top: 82.4%; left: 39%; width: 4.4%;" placeholder="Dia" id="dia">
+    <input type="text" class="campo" style="top: 82.4%; left: 46.3%; width: 18.8%;" placeholder="Mês" id="mes">
+    <input type="text" class="campo" style="top: 82.4%; left: 69.4%; width: 7.9%;" placeholder="Ano" id="ano">
+  </div>
+  
+  <!-- Botões melhorados -->
+  <div class="button-container">
+    <button onclick="gerarPDF()" class="pdf-button" id="btnPDF">📄 Baixar PDF</button>
+    <button onclick="enviarWhatsApp()" class="whatsapp-button" id="btnWhatsApp">📱 WhatsApp</button>
+    <button onclick="imprimirFormulario()" class="print-button" id="btnImprimir">🖨️ Imprimir</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    // Detectar dispositivo móvel de forma mais precisa
+    function isMobile() {
+      return window.innerWidth <= 768 || 
+             /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+             (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
+    }
+
+    // Sistema de toast notifications
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.classList.add('show'), 100);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => document.body.removeChild(toast), 300);
+      }, 3000);
+    }
+
+    // Loading otimizado
+    function showLoading(text = 'Processando...') {
+      const overlay = document.getElementById('loadingOverlay');
+      const loadingText = document.getElementById('loadingText');
+      loadingText.textContent = text;
+      overlay.style.display = 'flex';
+    }
+
+    function hideLoading() {
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.style.display = 'none';
+    }
+
+    // Ajustes específicos para mobile
+    function otimizarParaMobile() {
+      if (isMobile()) {
+        const campos = document.querySelectorAll('.campo');
+        
+        campos.forEach((campo, index) => {
+          // Melhorar responsividade
+          campo.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+          campo.style.border = '2px solid #007bff';
+          
+          if (campo.type === 'text') {
+            campo.style.minWidth = '70px';
+          }
+
+          // Eventos otimizados para touch
+          campo.addEventListener('focus', function() {
+            this.style.transform = 'scale(1.1)';
+            this.style.zIndex = '1000';
+            
+            // Scroll suave para o campo focado
+            setTimeout(() => {
+              this.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center',
+                inline: 'nearest'
+              });
+            }, 100);
+          });
+          
+          campo.addEventListener('blur', function() {
+            this.style.transform = '';
+            this.style.zIndex = '';
+          });
+
+          // Melhorar experiência com checkboxes
+          if (campo.type === 'checkbox') {
+            campo.addEventListener('change', function() {
+              showToast(
+                `${this.title || 'Opção'} ${this.checked ? 'selecionada' : 'desmarcada'}`, 
+                'success'
+              );
+            });
+          }
+        });
+        
+        // Adicionar meta tag para zoom
+        const metaViewport = document.querySelector('meta[name="viewport"]');
+        if (metaViewport) {
+          metaViewport.content = 'width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3.0, minimum-scale=0.5';
+        }
+      }
+    }
+
+    // Lógica melhorada para checkboxes mutuamente exclusivos
+    function configurarCheckboxesExclusivos() {
+      // Kits completos/incompletos
+      const kitsCompletos = document.getElementById('kitsCompletos');
+      const kitsIncompletos = document.getElementById('kitsIncompletos');
+      
+      kitsCompletos.addEventListener('change', function() {
+        if (this.checked) kitsIncompletos.checked = false;
+      });
+      
+      kitsIncompletos.addEventListener('change', function() {
+        if (this.checked) kitsCompletos.checked = false;
+      });
+      
+      // Estado dos equipamentos
+      const bomEstado = document.getElementById('bomEstado');
+      const mauEstado = document.getElementById('mauEstado');
+      
+      bomEstado.addEventListener('change', function() {
+        if (this.checked) mauEstado.checked = false;
+      });
+      
+      mauEstado.addEventListener('change', function() {
+        if (this.checked) bomEstado.checked = false;
+      });
+    }
+
+    // Preparar para PDF com melhor rendering
+    function prepararParaPDF() {
+      const container = document.getElementById('formulario-pdf');
+      const inputs = container.querySelectorAll('input');
+      const substituidos = [];
+
+      inputs.forEach(input => {
+        const span = document.createElement('span');
+        
+        if (input.type === 'checkbox') {
+          span.textContent = input.checked ? '☑' : '☐';
+          span.style.fontSize = '16px';
+          span.style.fontWeight = 'bold';
+          span.style.color = input.checked ? '#007bff' : '#666';
+          span.style.textAlign = 'center';
+          span.style.lineHeight = '16px';
+        } else {
+          const valor = input.value || '_'.repeat(Math.max(20, Math.floor(parseInt(input.style.width) / 8)));
+          span.textContent = valor;
+          span.style.fontSize = '11px';
+          span.style.fontWeight = '500';
+          span.style.color = input.value ? '#000' : '#999';
+        }
+        
+        // Copiar estilos de posicionamento
+        span.style.position = 'absolute';
+        span.style.top = input.style.top;
+        span.style.left = input.style.left;
+        span.style.width = input.style.width;
+        span.style.fontFamily = 'Arial, sans-serif';
+        span.style.padding = '2px';
+        span.style.border = 'none';
+        span.style.background = 'transparent';
+        span.style.lineHeight = input.type === 'checkbox' ? '16px' : '1.2';
+        span.style.display = 'inline-block';
+        span.style.overflow = 'hidden';
+        span.style.whiteSpace = 'nowrap';
+        span.style.textOverflow = 'ellipsis';
+        
+        container.appendChild(span);
+        substituidos.push({ original: input, substituto: span });
+        input.style.display = 'none';
+      });
+
+      return substituidos;
+    }
+
+    function restaurarInputs(substituidos) {
+      substituidos.forEach(({ original, substituto }) => {
+        substituto.remove();
+        original.style.display = '';
+      });
+    }
+
+    // Gerar PDF otimizado
+    async function gerarPDF() {
+      showLoading('Gerando PDF...');
+      
+      try {
+        const container = document.getElementById('formulario-pdf');
+        const substituidos = prepararParaPDF();
+
+        const nomeCliente = document.getElementById('nomeCliente').value || 'Cliente';
+        const protocolo = document.getElementById('protocolo').value || new Date().getTime();
+
+        const opt = {
+          margin: [10, 10, 10, 10],
+          filename: `brisanet-os-${nomeCliente.replace(/\s+/g, '-')}-${protocolo}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { 
+            scale: 2.5,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff',
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: container.scrollWidth,
+            windowHeight: container.scrollHeight,
+            letterRendering: true
+          },
+          jsPDF: { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: 'portrait',
+            compress: true
+          }
+        };
+
+        await html2pdf().set(opt).from(container).save();
+        
+        showToast('PDF gerado com sucesso!', 'success');
+        hideLoading();
+        
+      } catch (error) {
+        console.error('Erro ao gerar PDF:', error);
+        showToast('Erro ao gerar PDF. Tente novamente.', 'error');
+        hideLoading();
+      } finally {
+        setTimeout(() => {
+          try {
+            restaurarInputs(substituidos);
+          } catch (e) {
+            console.warn('Erro ao restaurar inputs:', e);
+          }
+        }, 1000);
+      }
+    }
+
+    // Imprimir otimizado
+    function imprimirFormulario() {
+      showLoading('Preparando impressão...');
+      
+      const container = document.getElementById('formulario-pdf');
+      const substituidos = prepararParaPDF();
+
+      setTimeout(() => {
+        hideLoading();
+        window.print();
+        
+        setTimeout(() => {
+          restaurarInputs(substituidos);
+        }, 2000);
+      }, 800);
+    }
+
+    // WhatsApp melhorado com múltiplas tentativas
+    async function enviarWhatsApp() {
+      showLoading('Preparando WhatsApp...');
+      
+      try {
+        const nomeCliente = document.getElementById('nomeCliente').value || 'Cliente';
+        const cpf = document.getElementById('cpfCliente').value || 'N/A';
+        const protocolo = document.getElementById('protocolo').value || new Date().getTime();
+        const tecnico = document.getElementById('tecnico').value || 'N/A';
+        
+        // Coletar equipamentos selecionados
+        const equipamentos = [];
+        if (document.getElementById('equipONU').checked) {
+          const mac = document.getElementById('macONU').value;
+          equipamentos.push(`📡 ONU${mac ? ': ' + mac : ''}`);
+        }
+        if (document.getElementById('equipReceptor').checked) {
+          const mac = document.getElementById('macReceptor').value;
+          equipamentos.push(`📺 Receptor${mac ? ': ' + mac : ''}`);
+        }
+        if (document.getElementById('equipRoteador').checked) {
+          const ns = document.getElementById('nsRoteador').value;
+          equipamentos.push(`🌐 Roteador${ns ? ': ' + ns : ''}`);
+        }
+        if (document.getElementById('equipTelefone').checked) {
+          const ns = document.getElementById('nsTelefone').value;
+          equipamentos.push(`📞 Telefone${ns ? ': ' + ns : ''}`);
+        }
+
+        // Coletar serviços cancelados
+        const servicos = [];
+        if (document.getElementById('servico1').checked) servicos.push('TV por assinatura');
+        if (document.getElementById('servico2').checked) servicos.push('Ponto adicional TV');
+        if (document.getElementById('servico3').checked) servicos.push('Internet');
+        if (document.getElementById('servico4').checked) servicos.push('Telefonia');
+        
+        const mensagem = 
+          `🌐 *BRISANET - ORDEM DE SERVIÇO*\n\n` +
+          `👤 *Cliente:* ${nomeCliente}\n` +
+          `📄 *CPF:* ${cpf}\n` +
+          `🔖 *Protocolo:* ${protocolo}\n` +
+          `👨‍🔧 *Técnico:* ${tecnico}\n` +
+          `📅 *Data:* ${new Date().toLocaleDateString('pt-BR')}\n\n` +
+          
+          (servicos.length > 0 ? 
+            `❌ *Serviços Cancelados:*\n${servicos.map(s => `• ${s}`).join('\n')}\n\n` : '') +
+          
+          (equipamentos.length > 0 ? 
+            `📦 *Equipamentos Devolvidos:*\n${equipamentos.join('\n')}\n\n` : '') +
+          
+          `✅ *Status dos Kits:* ${document.getElementById('kitsCompletos').checked ? 'Completos' :
+

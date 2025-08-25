@@ -26,7 +26,8 @@
       background: white;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       border-radius: 8px;
-      overflow: hidden;
+      overflow: visible;
+      z-index: 1;
     }
 
     .imagem-fundo {
@@ -35,6 +36,8 @@
       display: block;
       object-fit: contain;
       max-width: 100%;
+      position: relative;
+      z-index: 5; /* Reduzido para ficar abaixo dos campos */
     }
 
     .campo {
@@ -48,6 +51,7 @@
       min-height: 18px;
       box-sizing: border-box;
       transition: all 0.3s ease;
+      z-index: 100; /* Aumentado para ficar acima da imagem */
     }
 
     .campo:focus {
@@ -59,25 +63,29 @@
       box-shadow: 0 2px 10px rgba(0,123,255,0.3);
     }
 
-    /* Checkboxes customizados */
+    /* Checkboxes customizados com z-index alto */
     input[type="checkbox"].campo {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       cursor: pointer;
       appearance: none;
       -webkit-appearance: none;
       -moz-appearance: none;
-      border: 2px solid #007bff;
-      border-radius: 3px;
-      background: white;
-      position: relative;
+      border: 3px solid #007bff;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.98);
+      position: absolute;
       margin: 0;
       padding: 0;
+      transition: all 0.3s ease;
+      z-index: 150; /* Z-index ainda maior para checkboxes */
     }
 
     input[type="checkbox"].campo:checked {
       background: #007bff;
       border-color: #0056b3;
+      transform: scale(1.1);
+      z-index: 150;
     }
 
     input[type="checkbox"].campo:checked::after {
@@ -87,14 +95,24 @@
       left: 50%;
       transform: translate(-50%, -50%);
       color: white;
-      font-size: 12px;
+      font-size: 14px;
       font-weight: bold;
       line-height: 1;
+      z-index: 151;
+    }
+
+    input[type="checkbox"].campo:hover {
+      border-color: #0056b3;
+      box-shadow: 0 0 8px rgba(0,123,255,0.3);
+      z-index: 200;
+      background: rgba(255, 255, 255, 1);
     }
 
     input[type="checkbox"].campo:focus {
-      transform: scale(1.1);
-      box-shadow: 0 0 8px rgba(0,123,255,0.5);
+      transform: scale(1.15);
+      box-shadow: 0 0 12px rgba(0,123,255,0.6);
+      outline: none;
+      z-index: 1000;
     }
 
     /* Responsividade avançada para mobile */
@@ -118,6 +136,7 @@
         min-height: 16px;
         border-width: 2px;
         min-width: 30px;
+        z-index: 100;
       }
       
       .campo[type="text"] {
@@ -125,8 +144,15 @@
       }
 
       input[type="checkbox"].campo {
-        width: 16px;
-        height: 16px;
+        width: 22px;
+        height: 22px;
+        border-width: 2px;
+        z-index: 150;
+        background: rgba(255, 255, 255, 1);
+      }
+
+      input[type="checkbox"].campo:checked::after {
+        font-size: 14px;
       }
       
       .button-container {
@@ -136,14 +162,13 @@
         gap: 8px;
       }
       
-      .pdf-button, .whatsapp-button, .print-button {
+      .whatsapp-button {
         width: 100%;
         min-width: auto;
-        margin: 0;
-        padding: 14px 16px;
-        font-size: 14px;
-        border-radius: 6px;
-        font-weight: 500;
+        margin: 15px 0;
+        padding: 20px;
+        font-size: 16px;
+        border-radius: 50px;
       }
     }
 
@@ -163,12 +188,13 @@
       }
 
       input[type="checkbox"].campo {
-        width: 14px;
-        height: 14px;
+        width: 20px;
+        height: 20px;
+        border-width: 2px;
       }
 
       input[type="checkbox"].campo:checked::after {
-        font-size: 10px;
+        font-size: 12px;
       }
     }
 
@@ -193,60 +219,90 @@
       border-top: 1px solid #dee2e6;
     }
 
-    .pdf-button, .print-button, .whatsapp-button {
-      padding: 14px 28px;
-      font-size: 16px;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: inline-block;
-      min-width: 180px;
-      margin: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .pdf-button {
-      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-      color: white;
-    }
-
-    .pdf-button:hover:not(:disabled) {
-      background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,123,255,0.3);
-    }
-
     .whatsapp-button {
-      background: linear-gradient(135deg, #25D366 0%, #1DA851 100%);
+      padding: 18px 40px;
+      font-size: 18px;
+      font-weight: 700;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: inline-block;
+      min-width: 280px;
+      margin: 15px auto;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 8px 25px rgba(37,211,102,0.3);
+      background: linear-gradient(135deg, #25D366 0%, #20c157 50%, #1DA851 100%);
       color: white;
+      position: relative;
+      overflow: hidden;
+      animation: pulse 2s infinite;
+    }
+
+    .whatsapp-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s;
+    }
+
+    .whatsapp-button:hover::before {
+      left: 100%;
     }
 
     .whatsapp-button:hover:not(:disabled) {
-      background: linear-gradient(135deg, #1DA851 0%, #128C7E 100%);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(37,211,102,0.3);
+      background: linear-gradient(135deg, #20c157 0%, #1DA851 50%, #128C7E 100%);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 35px rgba(37,211,102,0.4);
     }
 
-    .print-button {
-      background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-      color: white;
+    .whatsapp-button:active {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(37,211,102,0.3);
     }
 
-    .print-button:hover:not(:disabled) {
-      background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(108,117,125,0.3);
-    }
-
-    .whatsapp-button:disabled, .pdf-button:disabled, .print-button:disabled {
+    .whatsapp-button:disabled {
       background: #6c757d;
       cursor: not-allowed;
       transform: none;
       box-shadow: none;
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 8px 25px rgba(37,211,102,0.3);
+      }
+      50% {
+        box-shadow: 0 8px 25px rgba(37,211,102,0.5), 0 0 0 10px rgba(37,211,102,0.1);
+      }
+      100% {
+        box-shadow: 0 8px 25px rgba(37,211,102,0.3);
+      }
+    }
+
+    .whatsapp-icon {
+      display: inline-block;
+      margin-right: 12px;
+      font-size: 24px;
+      animation: bounce 1s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-8px);
+      }
+      60% {
+        transform: translateY(-4px);
+      }
     }
 
     /* Para impressão */
@@ -338,6 +394,16 @@
     .toast.error {
       background: #dc3545;
     }
+
+    /* Overlay para melhorar visibilidade dos checkboxes */
+    .checkbox-overlay {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 6px;
+      padding: 2px;
+      z-index: 99;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -352,60 +418,75 @@
   <div class="container" id="formulario-pdf">
     <img src="ordem-servico.JPG" alt="Formulário Brisanet" class="imagem-fundo" id="imagemOrdem">
     
-    <!-- Campos sobrepostos com posicionamento ajustado -->
-    <input type="text" class="campo" style="top: 20.3%; left: 63.9%; width: 28.5%;" placeholder="Nome do cliente" id="nomeCliente">
-    <input type="text" class="campo" style="top: 22.5%; left: 72.3%; width: 18.8%;" placeholder="CPF" id="cpfCliente">
+    <!-- Campos sobrepostos com posicionamento ajustado e z-index correto -->
+    <input type="text" class="campo" style="top: 19%; left: 63.5%; width: 28.5%;" placeholder="Nome do cliente" id="nomeCliente">
+    <input type="text" class="campo" style="top: 21.3%; left: 71.9%; width: 18.8%;" placeholder="CPF" id="cpfCliente">
     
-    <!-- Serviços cancelados - checkboxes alinhados -->
-    <input type="checkbox" class="campo" style="top: 114%; left: 30%;" id="servico1" title="TV por assinatura">
-    <input type="checkbox" class="campo" style="top: 56.8%; left: 42%;" id="servico2" title="Ponto adicional TV">
-    <input type="checkbox" class="campo" style="top: 26.8%; left: 61%;" id="servico3" title="Internet">
-    <input type="checkbox" class="campo" style="top: 26.8%; left: 71%;" id="servico4" title="Telefonia">
+    <!-- Serviços cancelados - linha horizontal com overlays para melhor visibilidade -->
+    <div class="checkbox-overlay" style="top: 320px; left: 188px; width: 24px; height: 24px;"></div>
+    <input type="checkbox" class="campo" style="top: 322px; left: 190px;" id="servico1" title="TV por assinatura">
+    
+    <div class="checkbox-overlay" style="top: 320px; left: 334px; width: 24px; height: 24px;"></div>
+    <input type="checkbox" class="campo" style="top: 322px; left: 336px;" id="servico2" title="Ponto adicional TV">
+    
+    <div class="checkbox-overlay" style="top: 320px; left: 486px; width: 24px; height: 24px;"></div>
+    <input type="checkbox" class="campo" style="top: 322px; left: 488px;" id="servico3" title="Internet">
+    
+    <div class="checkbox-overlay" style="top: 320px; left: 566px; width: 24px; height: 24px;"></div>
+    <input type="checkbox" class="campo" style="top: 322px; left: 568px;" id="servico4" title="Telefonia">
     
     <!-- Equipamentos com checkboxes e campos de texto -->
-    <input type="checkbox" class="campo" style="top: 20.9%; left: 30.8%;" id="equipONU" title="ONU">
-    <input type="text" class="campo" style="top: 36.2%; left: 27.3%; width: 56.3%;" placeholder="MAC ONU" id="macONU">
+    <div class="checkbox-overlay" style="top: 417px; left: 148px; width: 24px; height: 24px;"></div>
+    <input type="checkbox" class="campo" style="top: 419px; left: 150px;" id="equipONU" title="ONU">
+    <input type="text" class="campo" style="top: 413px; left: 218px; width: 450px;" placeholder="MAC ONU" id="macONU">
     
-    <input type="checkbox" class="campo" style="top: 37.8%; left: 25.4%;" id="equipReceptor" title="Receptor">
-    <input type="text" class="campo" style="top: 39.4%; left: 33.3%; width: 50.1%;" placeholder="MAC Receptor" id="macReceptor">
+    <div class="checkbox-overlay" style="top: 452px; left: 201px; width: 24px; height: 24px;"></div>
+    <input type="checkbox" class="campo" style="top: 454px; left: 203px;" id="equipReceptor" title="Receptor">
+    <input type="text" class="campo" style="top: 450px; left: 266px; width: 401px;" placeholder="MAC Receptor" id="macReceptor">
     
-    <input type="checkbox" class="campo" style="top: 39.2%; left: 22.9%;" id="equipRoteador" title="Roteador">
-    <input type="text" class="campo" style="top: 43.9%; left: 29.8%; width: 53.8%;" placeholder="Mac Roteador" id="nsRoteador">
+    <div class="checkbox-overlay" style="top: 504px; left: 181px; width: 24px; height: 24px;"></div>
+    <input type="checkbox" class="campo" style="top: 506px; left: 183px;" id="equipRoteador" title="Roteador">
+    <input type="text" class="campo" style="top: 502px; left: 236px; width: 430px;" placeholder="N/S Roteador" id="nsRoteador">
     
-    <input type="checkbox" class="campo" style="top: 44.8%; left: 22.3%;" id="equipTelefone" title="Telefone">
-    <input type="text" class="campo" style="top: 46.6%; left: 29.8%; width: 54%;" placeholder="Serial Telefone" id="Telefone">
+    <div class="checkbox-overlay" style="top: 536px; left: 176px; width: 24px; height: 24px;"></div>
+    <input type="checkbox" class="campo" style="top: 538px; left: 178px;" id="equipTelefone" title="Telefone">
+    <input type="text" class="campo" style="top: 533px; left: 235px; width: 432px;" placeholder="N/S Telefone" id="nsTelefone">
     
     <!-- Os kits estão completos -->
-    <input type="text" class="campo" style="top: 51.9%; left: 19.1%; width: 37.5%;" placeholder="Os kits estão completos" id="kitsTexto">
-    <input type="checkbox" class="campo" style="top: 49.9%; left: 39.4%;" id="kitsCompletos" title="Sim">
-    <input type="checkbox" class="campo" style="top: 47.7%; left: 46.5%;" id="kitsIncompletos" title="Não">
+    <input type="text" class="campo" style="top: 593px; left: 153px; width: 300px;" placeholder="Os kits estão completos" id="kitsTexto">
+    <div class="checkbox-overlay" style="top: 570px; left: 313px; width: 24px; height: 24px;"></div>
+    <input type="checkbox" class="campo" style="top: 572px; left: 315px;" id="kitsCompletos" title="Sim">
+    <div class="checkbox-overlay" style="top: 570px; left: 370px; width: 24px; height: 24px;"></div>
+    <input type="checkbox" class="campo" style="top: 572px; left: 372px;" id="kitsIncompletos" title="Não">
     
     <!-- Os Equipamentos estão em bom estado de conservação -->
-    <input type="text" class="campo" style="top: 60.5%; left: 18.6%; width: 37.5%;" placeholder="Os Equipamentos estão em bom estado" id="estadoTexto">
-    <input type="checkbox" class="campo" style="top: 55.2%; left: 66.5%;" id="bomEstado" title="Sim">
-    <input type="checkbox" class="campo" style="top: 60.2%; left: 80%;" id="mauEstado" title="Não">
+    <input type="text" class="campo" style="top: 693px; left: 149px; width: 300px;" placeholder="Os Equipamentos estão em bom estado" id="estadoTexto">
+    <div class="checkbox-overlay" style="top: 660px; left: 530px; width: 24px; height: 24px;"></div>
+    <input type="checkbox" class="campo" style="top: 662px; left: 532px;" id="bomEstado" title="Sim">
+    <div class="checkbox-overlay" style="top: 660px; left: 590px; width: 24px; height: 24px;"></div>
+    <input type="checkbox" class="campo" style="top: 662px; left: 592px;" id="mauEstado" title="Não">
     
     <!-- Informações finais -->
-    <input type="text" class="campo" style="top: 68.6%; left: 35%; width: 37.5%;" placeholder="Protocolo de atendimento" id="protocolo">
-    <input type="text" class="campo" style="top: 72.8%; left: 35%; width: 37.5%;" placeholder="Técnico responsável" id="tecnico">
-    <input type="text" class="campo" style="top: 77.1%; left: 35%; width: 37.5%;" placeholder="Responsável pela devolução" id="responsavel">
-    <input type="text" class="campo" style="top: 81.2%; left: 35%; width: 37.5%;" placeholder="Grau de parentesco" id="parentesco">
+    <input type="text" class="campo" style="top: 65.3%; left: 35%; width: 37.5%;" placeholder="Protocolo de atendimento" id="protocolo">
+    <input type="text" class="campo" style="top: 69.3%; left: 35%; width: 37.5%;" placeholder="Técnico responsável" id="tecnico">
+    <input type="text" class="campo" style="top: 73.5%; left: 35%; width: 37.5%;" placeholder="Responsável pela devolução" id="responsavel">
+    <input type="text" class="campo" style="top: 77.3%; left: 35%; width: 37.5%;" placeholder="Grau de parentesco" id="parentesco">
     
     <!-- Local e data -->
-    <input type="text" class="campo" style="top: 86.4%; left: 28.1%; width: 10%;" placeholder="Cidade" id="cidade" value="Fortaleza">
-    <input type="text" class="campo" style="top: 86.4%; left: 39.3%; width: 4.4%;" placeholder="Dia" id="dia">
-    <input type="text" class="campo" style="top: 86.4%; left: 45.5%; width: 18.8%;" placeholder="Mês" id="mes">
-    <input type="text" class="campo" style="top: 86.4%; left: 69.8%; width: 7.9%;" placeholder="Ano" id="ano">
+    <input type="text" class="campo" style="top: 82.4%; left: 27.1%; width: 10%;" placeholder="Cidade" id="cidade" value="Fortaleza">
+    <input type="text" class="campo" style="top: 82.4%; left: 39%; width: 4.4%;" placeholder="Dia" id="dia">
+    <input type="text" class="campo" style="top: 82.4%; left: 46.3%; width: 18.8%;" placeholder="Mês" id="mes">
+    <input type="text" class="campo" style="top: 82.4%; left: 69.4%; width: 7.9%;" placeholder="Ano" id="ano">
   </div>
   
-  <!-- Botões melhorados -->
+  <!-- Botão WhatsApp animado -->
   <div class="button-container">
-    
-    <button onclick="enviarWhatsApp()" class="whatsapp-button" id="btnWhatsApp">📱 WhatsApp</button>
-    
+    <button onclick="enviarWhatsApp()" class="whatsapp-button" id="btnWhatsApp">
+      <span class="whatsapp-icon">📱</span>
+      Enviar via WhatsApp
+    </button>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
     // Detectar dispositivo móvel de forma mais precisa
     function isMobile() {
@@ -441,6 +522,61 @@
       overlay.style.display = 'none';
     }
 
+    // Inicialização melhorada
+    document.addEventListener('DOMContentLoaded', function() {
+      otimizarParaMobile();
+      configurarCheckboxesExclusivos();
+      adicionarEventosCheckboxes();
+      
+      // Garantir que checkboxes fiquem visíveis
+      setTimeout(() => {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => {
+          cb.style.zIndex = '150';
+          cb.style.position = 'absolute';
+        });
+      }, 100);
+    });
+
+    // Adicionar eventos específicos para checkboxes
+    function adicionarEventosCheckboxes() {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      
+      checkboxes.forEach(checkbox => {
+        // Evento de clique com propagação
+        checkbox.addEventListener('click', function(e) {
+          e.stopPropagation();
+          console.log(`Checkbox ${this.id} clicado:`, this.checked);
+          
+          // Feedback visual
+          this.style.transform = this.checked ? 'scale(1.2)' : 'scale(1.1)';
+          setTimeout(() => {
+            this.style.transform = '';
+          }, 200);
+          
+          // Toast de feedback
+          const status = this.checked ? 'selecionado' : 'desmarcado';
+          showToast(`✅ ${this.title || 'Item'} ${status}`, 'success');
+        });
+
+        // Evento de mudança
+        checkbox.addEventListener('change', function(e) {
+          console.log(`Checkbox ${this.id} mudou para:`, this.checked);
+        });
+
+        // Hover para melhor feedback
+        checkbox.addEventListener('mouseenter', function() {
+          this.style.zIndex = '200';
+          this.style.boxShadow = '0 0 12px rgba(0,123,255,0.5)';
+        });
+
+        checkbox.addEventListener('mouseleave', function() {
+          this.style.zIndex = '150';
+          this.style.boxShadow = '';
+        });
+      });
+    }
+
     // Ajustes específicos para mobile
     function otimizarParaMobile() {
       if (isMobile()) {
@@ -453,6 +589,12 @@
           
           if (campo.type === 'text') {
             campo.style.minWidth = '70px';
+          }
+
+          // Garantir z-index para checkboxes
+          if (campo.type === 'checkbox') {
+            campo.style.zIndex = '150';
+            campo.style.background = 'rgba(255, 255, 255, 1)';
           }
 
           // Eventos otimizados para touch
@@ -472,18 +614,8 @@
           
           campo.addEventListener('blur', function() {
             this.style.transform = '';
-            this.style.zIndex = '';
+            this.style.zIndex = campo.type === 'checkbox' ? '150' : '100';
           });
-
-          // Melhorar experiência com checkboxes
-          if (campo.type === 'checkbox') {
-            campo.addEventListener('change', function() {
-              showToast(
-                `${this.title || 'Opção'} ${this.checked ? 'selecionada' : 'desmarcada'}`, 
-                'success'
-              );
-            });
-          }
         });
         
         // Adicionar meta tag para zoom
@@ -501,11 +633,17 @@
       const kitsIncompletos = document.getElementById('kitsIncompletos');
       
       kitsCompletos.addEventListener('change', function() {
-        if (this.checked) kitsIncompletos.checked = false;
+        if (this.checked) {
+          kitsIncompletos.checked = false;
+          console.log('Kits marcados como completos');
+        }
       });
       
       kitsIncompletos.addEventListener('change', function() {
-        if (this.checked) kitsCompletos.checked = false;
+        if (this.checked) {
+          kitsCompletos.checked = false;
+          console.log('Kits marcados como incompletos');
+        }
       });
       
       // Estado dos equipamentos
@@ -513,12 +651,172 @@
       const mauEstado = document.getElementById('mauEstado');
       
       bomEstado.addEventListener('change', function() {
-        if (this.checked) mauEstado.checked = false;
+        if (this.checked) {
+          mauEstado.checked = false;
+          console.log('Equipamentos em bom estado');
+        }
       });
       
       mauEstado.addEventListener('change', function() {
-        if (this.checked) bomEstado.checked = false;
+        if (this.checked) {
+          bomEstado.checked = false;
+          console.log('Equipamentos em mau estado');
+        }
       });
+    }
+
+    // WhatsApp melhorado com debug dos checkboxes
+    async function enviarWhatsApp() {
+      showLoading('🚀 Preparando WhatsApp...');
+      
+      try {
+        // Dados básicos
+        const nomeCliente = document.getElementById('nomeCliente').value || 'Cliente';
+        const cpf = document.getElementById('cpfCliente').value || 'N/A';
+        const protocolo = document.getElementById('protocolo').value || `OS${Date.now()}`;
+        const tecnico = document.getElementById('tecnico').value || 'N/A';
+        const responsavel = document.getElementById('responsavel').value || 'N/A';
+        const parentesco = document.getElementById('parentesco').value || 'N/A';
+        const cidade = document.getElementById('cidade').value || 'Fortaleza';
+        
+        // Debug: verificar estado dos checkboxes
+        console.log('🔍 Debug Checkboxes:');
+        console.log('Servico 1:', document.getElementById('servico1').checked);
+        console.log('Servico 2:', document.getElementById('servico2').checked);
+        console.log('Servico 3:', document.getElementById('servico3').checked);
+        console.log('Servico 4:', document.getElementById('servico4').checked);
+        console.log('Kits Completos:', document.getElementById('kitsCompletos').checked);
+        console.log('Bom Estado:', document.getElementById('bomEstado').checked);
+        
+        // Coletar serviços cancelados
+        const servicos = [];
+        if (document.getElementById('servico1').checked) servicos.push('📺 TV por assinatura');
+        if (document.getElementById('servico2').checked) servicos.push('📺 Ponto adicional TV');
+        if (document.getElementById('servico3').checked) servicos.push('🌐 Internet');
+        if (document.getElementById('servico4').checked) servicos.push('📞 Telefonia');
+        
+        // Coletar equipamentos devolvidos
+        const equipamentos = [];
+        if (document.getElementById('equipONU').checked) {
+          const mac = document.getElementById('macONU').value;
+          equipamentos.push(`📡 ONU${mac ? ` (MAC: ${mac})` : ''}`);
+        }
+        if (document.getElementById('equipReceptor').checked) {
+          const mac = document.getElementById('macReceptor').value;
+          equipamentos.push(`📺 Receptor${mac ? ` (MAC: ${mac})` : ''}`);
+        }
+        if (document.getElementById('equipRoteador').checked) {
+          const ns = document.getElementById('nsRoteador').value;
+          equipamentos.push(`🌐 Roteador${ns ? ` (N/S: ${ns})` : ''}`);
+        }
+        if (document.getElementById('equipTelefone').checked) {
+          const ns = document.getElementById('nsTelefone').value;
+          equipamentos.push(`📞 Telefone${ns ? ` (N/S: ${ns})` : ''}`);
+        }
+        
+        // Status dos kits e equipamentos
+        let statusKits = '❓ Não informado';
+        if (document.getElementById('kitsCompletos').checked) statusKits = '✅ Completos';
+        if (document.getElementById('kitsIncompletos').checked) statusKits = '❌ Incompletos';
+        
+        let statusEquip = '❓ Não informado';
+        if (document.getElementById('bomEstado').checked) statusEquip = '✅ Bom estado';
+        if (document.getElementById('mauEstado').checked) statusEquip = '⚠️ Mau estado';
+        
+        // Criar mensagem completa
+        let mensagem = 
+          `🌐 *BRISANET - ORDEM DE SERVIÇO*\n` +
+          `═══════════════════════════════\n\n` +
+          
+          `👤 *DADOS DO CLIENTE*\n` +
+          `• Nome: ${nomeCliente}\n` +
+          `• CPF: ${cpf}\n` +
+          `• Protocolo: ${protocolo}\n\n` +
+          
+          `👨‍🔧 *TÉCNICO RESPONSÁVEL*\n` +
+          `• ${tecnico}\n\n` +
+          
+          `👥 *RESPONSÁVEL PELA DEVOLUÇÃO*\n` +
+          `• ${responsavel}\n` +
+          `• Parentesco: ${parentesco}\n\n`;
+          
+        // Adicionar serviços cancelados se houver
+        if (servicos.length > 0) {
+          mensagem += `❌ *SERVIÇOS CANCELADOS*\n${servicos.map(s => `• ${s}`).join('\n')}\n\n`;
+        }
+        
+        // Adicionar equipamentos devolvidos se houver
+        if (equipamentos.length > 0) {
+          mensagem += `📦 *EQUIPAMENTOS DEVOLVIDOS*\n${equipamentos.join('\n')}\n\n`;
+        }
+        
+        mensagem +=
+          `📋 *STATUS DOS KITS E EQUIPAMENTOS*\n` +
+          `• Kits: ${statusKits}\n` +
+          `• Equipamentos: ${statusEquip}\n\n` +
+          
+          `📍 *LOCAL E DATA*\n` +
+          `• ${cidade}, ${document.getElementById('dia').value || 'DD'}/${document.getElementById('mes').value || 'Mês'}/${document.getElementById('ano').value || 'AAAA'}\n\n` +
+          
+          `✅ *Ordem de serviço processada com sucesso!*\n\n` +
+          `🔥 *BRISANET* - _Conectando você ao futuro_`;
+
+        const mensagemEncoded = encodeURIComponent(mensagem);
+        
+        hideLoading();
+
+        // Abrir WhatsApp com tratamento por plataforma
+        let whatsappURL;
+        
+        if (isMobile()) {
+          // Tentar app nativo primeiro
+          whatsappURL = `whatsapp://send?text=${mensagemEncoded}`;
+          
+          // Criar link invisível para tentar abrir o app
+          const link = document.createElement('a');
+          link.href = whatsappURL;
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          // Fallback para WhatsApp Web após 2 segundos
+          setTimeout(() => {
+            const webURL = `https://api.whatsapp.com/send?text=${mensagemEncoded}`;
+            window.open(webURL, '_blank');
+          }, 2000);
+          
+        } else {
+          // Desktop: WhatsApp Web direto
+          whatsappURL = `https://web.whatsapp.com/send?text=${mensagemEncoded}`;
+          window.open(whatsappURL, '_blank', 'width=1000,height=700');
+        }
+
+        // Feedback de sucesso
+        showToast('📱 WhatsApp aberto! Verifique se todos os dados estão corretos!', 'success');
+        
+        // Animação de sucesso no botão
+        const btnWhatsApp = document.getElementById('btnWhatsApp');
+        const originalHTML = btnWhatsApp.innerHTML;
+        const originalBG = btnWhatsApp.style.background;
+        
+        btnWhatsApp.style.animation = 'none';
+        btnWhatsApp.style.background = 'linear-gradient(135deg, #28a745 0%, #20c157 100%)';
+        btnWhatsApp.innerHTML = '<span style="animation: bounce 0.5s;">✅</span> Enviado com sucesso!';
+        
+        setTimeout(() => {
+          btnWhatsApp.innerHTML = originalHTML;
+          btnWhatsApp.style.background = originalBG;
+          btnWhatsApp.style.animation = 'pulse 2s infinite';
+        }, 4000);
+        
+        console.log('✅ Mensagem preparada:', mensagem);
+        
+      } catch (error) {
+        console.error('❌ Erro WhatsApp:', error);
+        hideLoading();
+        showToast('❌ Erro ao preparar WhatsApp. Tente novamente.', 'error');
+      }
     }
 
     // Preparar para PDF com melhor rendering
@@ -645,55 +943,6 @@
         }, 2000);
       }, 800);
     }
-
-    // WhatsApp melhorado com múltiplas tentativas
-    async function enviarWhatsApp() {
-      showLoading('Preparando WhatsApp...');
-      
-      try {
-        const nomeCliente = document.getElementById('nomeCliente').value || 'Cliente';
-        const cpf = document.getElementById('cpfCliente').value || 'N/A';
-        const protocolo = document.getElementById('protocolo').value || new Date().getTime();
-        const tecnico = document.getElementById('tecnico').value || 'N/A';
-        
-        // Coletar equipamentos selecionados
-        const equipamentos = [];
-        if (document.getElementById('equipONU').checked) {
-          const mac = document.getElementById('macONU').value;
-          equipamentos.push(`📡 ONU${mac ? ': ' + mac : ''}`);
-        }
-        if (document.getElementById('equipReceptor').checked) {
-          const mac = document.getElementById('macReceptor').value;
-          equipamentos.push(`📺 Receptor${mac ? ': ' + mac : ''}`);
-        }
-        if (document.getElementById('equipRoteador').checked) {
-          const ns = document.getElementById('nsRoteador').value;
-          equipamentos.push(`🌐 Roteador${ns ? ': ' + ns : ''}`);
-        }
-        if (document.getElementById('equipTelefone').checked) {
-          const ns = document.getElementById('nsTelefone').value;
-          equipamentos.push(`📞 Telefone${ns ? ': ' + ns : ''}`);
-        }
-
-        // Coletar serviços cancelados
-        const servicos = [];
-        if (document.getElementById('servico1').checked) servicos.push('TV por assinatura');
-        if (document.getElementById('servico2').checked) servicos.push('Ponto adicional TV');
-        if (document.getElementById('servico3').checked) servicos.push('Internet');
-        if (document.getElementById('servico4').checked) servicos.push('Telefonia');
-        
-        const mensagem = 
-          `🌐 *BRISANET - ORDEM DE SERVIÇO*\n\n` +
-          `👤 *Cliente:* ${nomeCliente}\n` +
-          `📄 *CPF:* ${cpf}\n` +
-          `🔖 *Protocolo:* ${protocolo}\n` +
-          `👨‍🔧 *Técnico:* ${tecnico}\n` +
-          `📅 *Data:* ${new Date().toLocaleDateString('pt-BR')}\n\n` +
-          
-          (servicos.length > 0 ? 
-            `❌ *Serviços Cancelados:*\n${servicos.map(s => `• ${s}`).join('\n')}\n\n` : '') +
-          
-          (equipamentos.length > 0 ? 
-            `📦 *Equipamentos Devolvidos:*\n${equipamentos.join('\n')}\n\n` : '') +
-          
-          `✅ *Status dos Kits:* ${document.getElementById('kitsCompletos').checked ? 'Completos' :
+  </script>
+</body>
+</html>
